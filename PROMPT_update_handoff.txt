@@ -1,0 +1,29 @@
+I want to update the handoff file.
+
+STRICT RULES FOR HOW YOU MUST DO THIS — READ BEFORE TOUCHING ANYTHING:
+
+1. READ THE FULL ORIGINAL FILE FIRST.
+   Use the `view` tool with view_range to read the ENTIRE file from line 1 to the last line.
+   If the file is large, make multiple view calls (e.g. lines 1-300, 301-600, etc.) until you have read every single line.
+   Do NOT start editing until you have confirmed you have read the whole file.
+
+2. USE ONLY str_replace EDITS — NEVER REWRITE THE FILE FROM SCRATCH.
+   Every change must be a targeted str_replace on the existing file.
+   You are ADDING and UPDATING content — never replacing the whole file.
+   If you find yourself writing `create_file`, stop. That is wrong.
+
+3. AFTER ALL EDITS, RUN A DIFF.
+   Run: diff [original_file] [new_file]
+   Verify that every line from the original is either preserved or intentionally changed.
+   If any original section is missing, restore it immediately before proceeding.
+
+4. VERIFY LINE COUNT.
+   The new file must have MORE lines than the original (new content was added).
+   If the new file has the same or fewer lines than the original, something was deleted — find it and restore it.
+
+5. INCREMENT THE VERSION NUMBER.
+   Rename the file to the next version (e.g. v1.2 → v1.3).
+   Update the title line inside the file to match.
+
+6. OUTPUT BOTH FILES.
+   Present the updated handoff file AND update the README.md changelog with what changed and why.
