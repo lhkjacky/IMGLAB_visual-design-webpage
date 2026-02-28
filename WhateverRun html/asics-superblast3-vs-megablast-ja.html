@@ -1,0 +1,739 @@
+<!-- ASICS スーパーブラスト3 vs メガブラスト | Japanese WordPress Block -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* ===== RESET ===== */
+.content-visual *, .content-visual ::before, .content-visual ::after {
+  box-sizing: border-box; margin: 0; padding: 0;
+}
+
+/* ===== CONTAINER ===== */
+.content-visual .cv-container {
+  max-width: 64rem; margin: 0 auto; padding: 1.25rem;
+  font-family: "Hiragino Sans", "ヒラギノ角ゴシック", "Yu Gothic", "游ゴシック", ui-sans-serif, system-ui, sans-serif;
+  color: #334155; background: #f8fafc;
+}
+.content-visual .cv-mb { margin-bottom: 1.5rem; }
+
+/* ===== HERO — dark copper-teal gradient palette ===== */
+.content-visual .cv-hero {
+  background: linear-gradient(135deg, #0c2340 0%, #0e3a5e 45%, #0b5563 100%);
+  border-radius: 1.25rem; padding: 2.25rem 2rem; margin-bottom: 1.5rem;
+  position: relative; overflow: hidden;
+}
+.content-visual .cv-hero::before {
+  content:''; position:absolute; top:-60px; right:-60px; width:280px; height:280px;
+  background:radial-gradient(circle, rgba(0,230,180,0.14) 0%, transparent 70%);
+  border-radius:50%; pointer-events:none;
+}
+.content-visual .cv-hero-badge {
+  display:inline-flex; align-items:center;
+  background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.18);
+  padding:0.3rem 0.875rem; border-radius:9999px;
+  font-size:0.8rem; font-weight:600; color:#7ef0d6; letter-spacing:0.04em;
+}
+.content-visual .cv-h1 {
+  color: #ffffff;
+  font-size: clamp(1.6rem, 4vw, 2.6rem); font-weight:900;
+  line-height:1.15; letter-spacing:-0.02em; margin-bottom:0.75rem;
+}
+.content-visual .cv-h1-accent { color: #00e6b4; }
+.content-visual .cv-hero-sub { font-size:0.9rem; color:#a0c8d8; margin-bottom:1.75rem; line-height:1.65; }
+.content-visual .cv-hero-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:0.75rem; }
+.content-visual .cv-hero-stat {
+  background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.10);
+  border-radius:0.75rem; padding:0.875rem; text-align:center;
+}
+.content-visual .cv-stat-val { font-size:1.25rem; font-weight:900; color:#00e6b4; }
+.content-visual .cv-stat-val-sm { font-size:1rem; font-weight:900; color:#00e6b4; }
+.content-visual .cv-stat-label { font-size:0.65rem; color:#a0c8d8; margin-top:0.2rem; line-height:1.3; }
+
+/* ===== CARDS ===== */
+.content-visual .cv-card {
+  background:white; border-radius:1rem; padding:1.75rem;
+  margin-bottom:1.5rem; border:1px solid #e2e8f0;
+}
+.content-visual .cv-card-title {
+  font-size:1.15rem; font-weight:800; color:#0f172a; margin-bottom:1.25rem;
+  display:flex; align-items:center; gap:0.6rem;
+}
+.content-visual .cv-dark {
+  background:linear-gradient(135deg,#1e293b,#0f172a);
+  border-radius:1rem; padding:1.75rem; margin-bottom:1.5rem;
+}
+.content-visual .cv-dark .cv-card-title { color:white; }
+
+/* accent tint */
+.content-visual .cv-tinted {
+  background:linear-gradient(135deg,#f0fbf8 0%, #e6f7fc 100%);
+  border:1px solid #b2ead8; border-radius:1rem; padding:1.75rem; margin-bottom:1.5rem;
+}
+
+/* ===== WOW ===== */
+.content-visual .cv-wow {
+  background:linear-gradient(135deg, #0b5563, #0c2340);
+  border-radius:1rem; padding:1.75rem; text-align:center; color:white; margin-bottom:1.5rem;
+}
+.content-visual .cv-wow-label {
+  font-size:0.75rem; font-weight:700; opacity:0.8;
+  letter-spacing:0.12em; text-transform:uppercase; margin-bottom:0.6rem; color:#7ef0d6;
+}
+.content-visual .cv-wow-number {
+  font-size:clamp(2.5rem,7vw,5rem); font-weight:900;
+  line-height:1; margin-bottom:0.6rem; color:#00e6b4;
+}
+.content-visual .cv-wow-body {
+  font-size:0.9rem; color:#cbd5e1; line-height:1.65; max-width:32rem; margin:0 auto;
+}
+
+/* ===== GRIDS ===== */
+.content-visual .cv-grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; }
+.content-visual .cv-grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+
+/* ===== SPEC TABLE ===== */
+.content-visual .cv-table-wrap { overflow-x:auto; border-radius:0.75rem; }
+.content-visual .cv-table { width:100%; border-collapse:collapse; font-size:0.875rem; }
+.content-visual .cv-table th {
+  background:#0c2340; color:#7ef0d6;
+  padding:0.75rem 1rem; font-weight:700; text-align:left; font-size:0.8rem;
+}
+.content-visual .cv-table td {
+  padding:0.7rem 1rem; border-bottom:1px solid #e2e8f0; color:#334155;
+  vertical-align:middle;
+}
+.content-visual .cv-table tr:last-child td { border-bottom:none; }
+.content-visual .cv-table tr:hover td { background:#f0fbf8; }
+.content-visual .cv-tr-sb3 td { background:#f0fbf8; font-weight:600; }
+.content-visual .cv-tr-mb td { background:#fff; }
+.content-visual .cv-spec-good { color:#15803d; font-weight:700; }
+.content-visual .cv-spec-note { color:#64748b; font-size:0.78rem; }
+
+/* Mobile spec cards */
+.content-visual .cv-tbl-pc     { display:block; }
+.content-visual .cv-tbl-mobile { display:none; }
+.content-visual .cv-sc-row {
+  border-bottom:1px solid #f1f5f9; padding:0.875rem 0;
+}
+.content-visual .cv-sc-row:last-child { border-bottom:none; padding-bottom:0; }
+.content-visual .cv-sc-label {
+  font-size:0.72rem; font-weight:700; color:#64748b;
+  text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.5rem;
+}
+.content-visual .cv-sc-new, .content-visual .cv-sc-old {
+  flex:1; border-radius:0.5rem; padding:0.625rem 0.75rem;
+  display:flex; flex-direction:column; gap:0.2rem;
+}
+.content-visual .cv-sc-new { background:#f0fbf8; border:1px solid #b2ead8; }
+.content-visual .cv-sc-old  { background:#f8fafc; border:1px solid #e2e8f0; }
+.content-visual .cv-sc-model { font-size:0.62rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; }
+.content-visual .cv-sc-new .cv-sc-model { color:#0b7a61; }
+.content-visual .cv-sc-old .cv-sc-model { color:#94a3b8; }
+.content-visual .cv-sc-val { font-size:0.875rem; font-weight:700; color:#0f172a; }
+
+/* ===== PROS / CONS ===== */
+.content-visual .cv-pros-cons { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; }
+.content-visual .cv-pros { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:0.75rem; padding:1.1rem; }
+.content-visual .cv-cons { background:#fff5f5; border:1px solid #fecaca; border-radius:0.75rem; padding:1.1rem; }
+.content-visual .cv-pct { font-size:0.875rem; font-weight:800; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem; }
+.content-visual .cv-pct-pro { color:#15803d; }
+.content-visual .cv-pct-con { color:#dc2626; }
+.content-visual .cv-pcl { display:flex; flex-direction:column; gap:0.5rem; }
+.content-visual .cv-pci { display:flex; gap:0.5rem; align-items:flex-start; font-size:0.84rem; line-height:1.55; color:#334155; }
+.content-visual .cv-pci-pro .cv-pci-icon-pro { color:#22c55e; flex-shrink:0; margin-top:0.1rem; }
+.content-visual .cv-pci-con .cv-pci-icon-con { color:#f87171; flex-shrink:0; margin-top:0.1rem; }
+
+/* ===== PROGRESS BARS ===== */
+.content-visual .cv-bar-row { margin-bottom:1rem; }
+.content-visual .cv-bar-lbl { display:flex; justify-content:space-between; font-size:0.84rem; font-weight:600; color:#0f172a; margin-bottom:0.35rem; }
+.content-visual .cv-bar-track { background:#e2e8f0; border-radius:9999px; height:0.625rem; }
+.content-visual .cv-bar-fill  { height:0.625rem; border-radius:9999px; }
+.content-visual .cv-bar-caption { font-size:0.72rem; color:#64748b; margin-top:0.25rem; }
+
+/* ===== VERDICT / DARK SECTION ===== */
+.content-visual .cv-vbox {
+  background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
+  border-radius:0.75rem; padding:1.1rem;
+}
+.content-visual .cv-vtitle { font-size:0.875rem; font-weight:800; margin-bottom:0.625rem; }
+.content-visual .cv-vlist { list-style:none; padding:0; display:flex; flex-direction:column; gap:0.45rem; }
+.content-visual .cv-vlist li { font-size:0.84rem; color:#e2e8f0; line-height:1.5; padding-left:0.875rem; position:relative; }
+.content-visual .cv-vlist li::before { content:'›'; position:absolute; left:0; color:rgba(255,255,255,0.4); }
+
+/* ===== HIERARCHY CARDS ===== */
+.content-visual .cv-hier { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:0.75rem; padding:1.1rem; }
+.content-visual .cv-hier-center { background:rgba(0,230,180,0.1); border-color:rgba(0,230,180,0.3); }
+.content-visual .cv-hier-cat { font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; margin-bottom:0.35rem; }
+.content-visual .cv-hier-name { font-size:0.95rem; font-weight:800; color:white; margin-bottom:0.35rem; }
+.content-visual .cv-hier-body { font-size:0.78rem; color:#94a3b8; line-height:1.5; }
+
+/* ===== INSIGHT / WARN BOXES ===== */
+.content-visual .cv-ins-blue {
+  background:#eff6ff; border-left:4px solid #3b82f6;
+  border-radius:0 0.5rem 0.5rem 0; padding:0.875rem 1rem;
+  font-size:0.875rem; color:#1e40af; line-height:1.6; margin-bottom:1rem;
+}
+.content-visual .cv-ins-green {
+  background:#f0fdf4; border-left:4px solid #22c55e;
+  border-radius:0 0.5rem 0.5rem 0; padding:0.875rem 1rem;
+  font-size:0.875rem; color:#15803d; line-height:1.6; margin-bottom:1rem;
+}
+.content-visual .cv-ins-amber {
+  background:#fffbeb; border-left:4px solid #f59e0b;
+  border-radius:0 0.5rem 0.5rem 0; padding:0.875rem 1rem;
+  font-size:0.875rem; color:#92400e; line-height:1.6; margin-bottom:1rem;
+}
+
+/* ===== TAGS ===== */
+.content-visual .cv-tag {
+  display:inline-block; padding:0.15rem 0.55rem; border-radius:9999px;
+  font-size:0.7rem; font-weight:700; margin:0.1rem;
+}
+.content-visual .cv-tag-teal  { background:#ccfbef; color:#0b5563; }
+.content-visual .cv-tag-blue  { background:#dbeafe; color:#1d4ed8; }
+.content-visual .cv-tag-green { background:#dcfce7; color:#15803d; }
+.content-visual .cv-tag-amber { background:#fef3c7; color:#92400e; }
+.content-visual .cv-tag-red   { background:#fee2e2; color:#dc2626; }
+
+/* ===== BODY TEXT ===== */
+.content-visual .cv-body { font-size:0.875rem; color:#475569; line-height:1.75; margin-bottom:1rem; }
+.content-visual .cv-body:last-child { margin-bottom:0; }
+
+/* ===== IMAGE BLOCKS ===== */
+.content-visual .cv-img-block {
+  background:white; border-radius:1rem; overflow:hidden;
+  border:1px solid #e2e8f0; margin-bottom:1.5rem;
+}
+.content-visual .cv-img-main { width:100%; height:auto; display:block; object-fit:cover; }
+.content-visual .cv-img-landscape { max-height:400px; object-fit:cover; object-position:center; }
+.content-visual .cv-img-credit {
+  font-size:0.68rem; color:#94a3b8; padding:0.45rem 1rem;
+  text-align:right; background:#f8fdfd; border-top:1px solid #d4ede8;
+}
+
+/* ===== NOTO ICONS ===== */
+.content-visual .cv-noto-lg { width:60px; height:60px; flex-shrink:0; align-self:center; }
+.content-visual .cv-noto-md { width:36px; height:36px; flex-shrink:0; align-self:center; }
+.content-visual .cv-noto-sm { width:24px; height:24px; flex-shrink:0; align-self:center; }
+
+/* ===== SOURCE NOTE ===== */
+.content-visual .cv-source {
+  background:white; border:1px solid #e2e8f0; border-radius:0.75rem;
+  padding:0.875rem 1.25rem; margin-top:0.75rem;
+  display:flex; align-items:center; gap:1rem;
+}
+.content-visual .cv-source-lbl { font-size:0.7rem; font-weight:700; color:#64748b; text-transform:uppercase; margin-bottom:0.15rem; }
+.content-visual .cv-source-link { font-size:0.875rem; color:#1d4ed8; text-decoration:none; font-weight:600; }
+
+/* ===== SEPARATOR ===== */
+.content-visual .cv-sep { border:none; border-top:1px solid #e2e8f0; margin:1.25rem 0; }
+
+/* ===== MOBILE BREAKPOINT ===== */
+@media (max-width: 640px) {
+  .content-visual .cv-container { padding:0; background:transparent; }
+  .content-visual .cv-mb { margin-bottom:0.625rem; }
+  .content-visual .cv-hero { border-radius:0; padding:1.5rem 1rem; margin-bottom:0.625rem; }
+  .content-visual .cv-card { border-radius:0; border-left:none; border-right:none; padding:1.25rem 1rem; margin-bottom:0.625rem; }
+  .content-visual .cv-dark { border-radius:0; padding:1.25rem 1rem; margin-bottom:0.625rem; }
+  .content-visual .cv-wow  { border-radius:0; padding:1.25rem 1rem; margin-bottom:0.625rem; }
+  .content-visual .cv-tinted { border-radius:0; border-left:none; border-right:none; padding:1.25rem 1rem; margin-bottom:0.625rem; }
+  .content-visual .cv-source { border-radius:0; border-left:none; border-right:none; }
+  .content-visual .cv-img-block { border-radius:0; border-left:none; border-right:none; margin-bottom:0.625rem; }
+  .content-visual .cv-img-landscape { max-height:220px; }
+
+  .content-visual .cv-hero-stats { grid-template-columns:repeat(2,1fr); gap:0.5rem; }
+  .content-visual .cv-hero-stat { padding:0.75rem 0.5rem; }
+  .content-visual .cv-stat-val { font-size:1.05rem; }
+  .content-visual .cv-stat-val-sm { font-size:0.9rem; }
+  .content-visual .cv-card-title { font-size:1.05rem; }
+
+  .content-visual .cv-grid-2,
+  .content-visual .cv-grid-3,
+  .content-visual .cv-pros-cons { grid-template-columns:1fr; gap:0.75rem; }
+
+  .content-visual .cv-tbl-pc     { display:none; }
+  .content-visual .cv-tbl-mobile { display:block; }
+
+  .content-visual .cv-noto-lg { width:32px; height:32px; }
+  .content-visual .cv-noto-md { width:22px; height:22px; }
+  .content-visual .cv-noto-sm { display:none; }
+}
+</style>
+
+<div class="content-visual">
+<div class="cv-container">
+
+<!-- ===== HERO ===== -->
+<div class="cv-hero">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+    <div class="cv-hero-badge">ランニングシューズ比較 · 2025–2026</div>
+    <img src="https://api.iconify.design/noto/running-shoe.svg?height=60" class="cv-noto-lg" alt="running shoe icon" width="60" height="60">
+  </div>
+  <h1 class="cv-h1">スーパーブラスト3 vs <span class="cv-h1-accent">メガブラスト</span></h1>
+  <p class="cv-hero-sub">どちらもアシックスが誇るノンプレート厚底トレーナー。似て非なる2足の用途の違いを徹底解説する。</p>
+  <div class="cv-hero-stats">
+    <div class="cv-hero-stat">
+      <div class="cv-stat-val">239g</div>
+      <div class="cv-stat-label">スーパーブラスト3<br>重量（27cm）</div>
+    </div>
+    <div class="cv-hero-stat">
+      <div class="cv-stat-val">224g</div>
+      <div class="cv-stat-label">メガブラスト<br>重量（27cm）</div>
+    </div>
+    <div class="cv-hero-stat">
+      <div class="cv-stat-val-sm">FF LEAP</div>
+      <div class="cv-stat-label">スーパーブラスト3<br>上層フォーム</div>
+    </div>
+    <div class="cv-hero-stat">
+      <div class="cv-stat-val-sm">FF TURBO²</div>
+      <div class="cv-stat-label">メガブラスト<br>ミッドソール</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== OFFICIAL PRODUCT IMAGE — SB3 ===== -->
+<div class="cv-img-block cv-mb">
+  <img
+    src="https://assets.asics.com/system/media_libraries/25477/file.jpg"
+    class="cv-img-main cv-img-landscape"
+    alt="asics-superblast-3-official-product-2026"
+    loading="lazy"
+  >
+  <div class="cv-img-credit">© ASICS / corp.asics.com — 公式プレス素材</div>
+</div>
+
+<!-- ===== SPEC TABLE ===== -->
+<div class="cv-card cv-mb">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
+    <div class="cv-card-title" style="margin-bottom:0;">
+      <i class="fa-solid fa-table-cells" style="color:#00e6b4;"></i> 基本スペック比較
+    </div>
+    <img src="https://api.iconify.design/noto/bar-chart.svg?height=36" class="cv-noto-md" alt="specs chart icon" width="36" height="36">
+  </div>
+
+  <!-- PC TABLE -->
+  <div class="cv-table-wrap cv-tbl-pc">
+    <table class="cv-table">
+      <thead>
+        <tr>
+          <th>項目</th>
+          <th>スーパーブラスト3</th>
+          <th>メガブラスト</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="cv-tr-sb3">
+          <td><strong>重量</strong><div class="cv-spec-note">27cm（US9）片足</div></td>
+          <td>239g</td>
+          <td>224g <span class="cv-spec-good">(-15g)</span></td>
+        </tr>
+        <tr class="cv-tr-mb">
+          <td><strong>スタックハイト</strong><div class="cv-spec-note">ヒール / フォアフット</div></td>
+          <td>46.5mm / 38.5mm</td>
+          <td>45mm / 37mm</td>
+        </tr>
+        <tr class="cv-tr-sb3">
+          <td><strong>ドロップ</strong></td>
+          <td>8mm</td>
+          <td>8mm</td>
+        </tr>
+        <tr class="cv-tr-mb">
+          <td><strong>ミッドソール（上層）</strong></td>
+          <td>FFリープ</td>
+          <td>FF TURBO²（単層）</td>
+        </tr>
+        <tr class="cv-tr-sb3">
+          <td><strong>ミッドソール（下層）</strong></td>
+          <td>FFブラストプラス</td>
+          <td>—（単層設計）</td>
+        </tr>
+        <tr class="cv-tr-mb">
+          <td><strong>アウトソール</strong></td>
+          <td>アシックスグリップ（AHAR+）</td>
+          <td>アシックスグリップ</td>
+        </tr>
+        <tr class="cv-tr-sb3">
+          <td><strong>アッパー</strong></td>
+          <td>エンジニアードウーブン</td>
+          <td>エンジニアードウーブン</td>
+        </tr>
+        <tr class="cv-tr-mb">
+          <td><strong>フォアフット形状</strong></td>
+          <td>トランポリンポッド搭載<br>前足部くぼみ構造</td>
+          <td>トランポリン型島状ソール</td>
+        </tr>
+        <tr class="cv-tr-sb3">
+          <td><strong>前モデル比 改良</strong></td>
+          <td>前作より約10g軽量化<br>反発性約15.2%向上（公式）</td>
+          <td>2025年新登場</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MOBILE CARDS -->
+  <div class="cv-tbl-mobile">
+    <div class="cv-sc-row">
+      <div class="cv-sc-label">重量（27cm片足）</div>
+      <div style="display:flex; gap:0.625rem;">
+        <div class="cv-sc-new"><span class="cv-sc-model">SB3</span><span class="cv-sc-val">239g</span></div>
+        <div class="cv-sc-old"><span class="cv-sc-model">MB</span><span class="cv-sc-val" style="color:#15803d; font-weight:800;">224g</span></div>
+      </div>
+    </div>
+    <div class="cv-sc-row">
+      <div class="cv-sc-label">スタック（ヒール）</div>
+      <div style="display:flex; gap:0.625rem;">
+        <div class="cv-sc-new"><span class="cv-sc-model">SB3</span><span class="cv-sc-val">46.5mm</span></div>
+        <div class="cv-sc-old"><span class="cv-sc-model">MB</span><span class="cv-sc-val">45mm</span></div>
+      </div>
+    </div>
+    <div class="cv-sc-row">
+      <div class="cv-sc-label">ドロップ</div>
+      <div style="display:flex; gap:0.625rem;">
+        <div class="cv-sc-new"><span class="cv-sc-model">SB3</span><span class="cv-sc-val">8mm</span></div>
+        <div class="cv-sc-old"><span class="cv-sc-model">MB</span><span class="cv-sc-val">8mm</span></div>
+      </div>
+    </div>
+    <div class="cv-sc-row">
+      <div class="cv-sc-label">ミッドソール素材</div>
+      <div style="display:flex; gap:0.625rem;">
+        <div class="cv-sc-new"><span class="cv-sc-model">SB3</span><span class="cv-sc-val" style="font-size:0.8rem;">FFリープ + FFブラストプラス</span></div>
+        <div class="cv-sc-old"><span class="cv-sc-model">MB</span><span class="cv-sc-val" style="font-size:0.8rem;">FF TURBO²（単層）</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:1rem;">
+    <div class="cv-ins-blue">
+      <strong>📌 出典：</strong>スーパーブラスト3のスペックはアシックス公式プレスリリース（2026年2月）、カナダ・ランニング誌レビュー、Running Labによるもの。メガブラストはDoctors of Running実測値（224g/US9）および複数レビューサイトを参照。
+    </div>
+  </div>
+</div>
+
+<!-- ===== WOW CALLOUT ===== -->
+<div class="cv-wow cv-mb">
+  <div class="cv-wow-label">
+    <i class="fa-solid fa-bolt" style="margin-right:0.4rem;"></i> アシックス公式データ
+  </div>
+  <div class="cv-wow-number">+15.2%</div>
+  <div class="cv-wow-body">スーパーブラスト3のFFリープは、前モデルに採用されていたFF TURBO PLUSと比較して反発性を約15.2%向上させたとアシックスが公式に発表している。前作より約10g軽量になりながら、スタックハイトはさらに高まった。</div>
+</div>
+
+<!-- ===== TECHNOLOGY SECTION ===== -->
+<div class="cv-card cv-mb">
+  <div class="cv-card-title">
+    <i class="fa-solid fa-microchip" style="color:#00e6b4;"></i> ミッドソール技術の違い
+  </div>
+  <div class="cv-grid-2" style="gap:1.25rem;">
+    <div style="background:#f0fbf8; border:1px solid #b2ead8; border-radius:0.75rem; padding:1.1rem;">
+      <div style="font-size:0.95rem; font-weight:800; color:#0f172a; margin-bottom:0.5rem;">スーパーブラスト3</div>
+      <div style="font-size:0.75rem; font-weight:700; color:#0b7a61; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.6rem;">2層構造</div>
+      <p style="font-size:0.84rem; color:#334155; line-height:1.65; margin-bottom:0.75rem;">上層に<strong>FFリープ</strong>（メタスピードシリーズのレーシング素材）、下層に<strong>FFブラストプラス</strong>を組み合わせた2層構造。FFリープはA-TPUベースで軽量かつ高反発。前足部には「トランポリンポッド」と呼ばれる独自のくぼみ構造を配置し、蹴り出し時の推進力を高める設計となっている。</p>
+      <div style="font-size:0.78rem; color:#64748b;">「柔らかくて弾む」感触。ゆっくりとしたペースでも快適に楽しめる。</div>
+    </div>
+    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:0.75rem; padding:1.1rem;">
+      <div style="font-size:0.95rem; font-weight:800; color:#0f172a; margin-bottom:0.5rem;">メガブラスト</div>
+      <div style="font-size:0.75rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.6rem;">単層構造</div>
+      <p style="font-size:0.84rem; color:#334155; line-height:1.65; margin-bottom:0.75rem;">フルスラブの<strong>FF TURBO²（フライトフォームターボスクエアド）</strong>を単層で採用。通常のFF TURBOより反発性が約32.5%高く（アシックス発表）、よりエネルギーリターンが速い。エネルギーをゆっくり返すのではなく、素早く「蹴り返す」ような反応性が特徴。</p>
+      <div style="font-size:0.78rem; color:#64748b;">「固すぎないが反発が速い」感触。ペースを上げるほど真価を発揮する。</div>
+    </div>
+  </div>
+
+  <hr class="cv-sep">
+
+  <div style="margin-bottom:0.5rem;">
+    <div style="font-size:0.875rem; font-weight:700; color:#0f172a; margin-bottom:0.875rem;">乗り心地の特性（相対比較）</div>
+    <div class="cv-bar-row">
+      <div class="cv-bar-lbl">
+        <span>クッション性（柔らかさ）</span>
+        <span></span>
+      </div>
+      <div style="display:flex; gap:0.5rem; align-items:center; font-size:0.75rem; color:#64748b; margin-bottom:0.2rem;">
+        <span style="width:80px; flex-shrink:0;">SB3</span>
+        <div class="cv-bar-track" style="flex:1;"><div class="cv-bar-fill" style="width:82%; background:linear-gradient(to right,#00e6b4,#0b7a61);"></div></div>
+        <span style="width:30px; text-align:right; font-weight:700; color:#0b7a61;">高</span>
+      </div>
+      <div style="display:flex; gap:0.5rem; align-items:center; font-size:0.75rem; color:#64748b;">
+        <span style="width:80px; flex-shrink:0;">メガブラスト</span>
+        <div class="cv-bar-track" style="flex:1;"><div class="cv-bar-fill" style="width:65%; background:linear-gradient(to right,#64748b,#334155);"></div></div>
+        <span style="width:30px; text-align:right; font-weight:700; color:#334155;">中高</span>
+      </div>
+    </div>
+    <div class="cv-bar-row">
+      <div style="display:flex; gap:0.5rem; align-items:center; font-size:0.75rem; color:#64748b; margin-bottom:0.2rem;">
+        <span style="width:80px; flex-shrink:0;">SB3</span>
+        <div class="cv-bar-track" style="flex:1;"><div class="cv-bar-fill" style="width:62%; background:linear-gradient(to right,#00e6b4,#0b7a61);"></div></div>
+        <span style="width:50px; text-align:right; font-weight:700; color:#0b7a61;">中高</span>
+      </div>
+      <div style="display:flex; gap:0.5rem; align-items:center; font-size:0.75rem; color:#64748b; margin-bottom:0.3rem;">
+        <span style="width:80px; flex-shrink:0;">メガブラスト</span>
+        <div class="cv-bar-track" style="flex:1;"><div class="cv-bar-fill" style="width:85%; background:linear-gradient(to right,#64748b,#334155);"></div></div>
+        <span style="width:50px; text-align:right; font-weight:700; color:#334155;">高</span>
+      </div>
+      <div class="cv-bar-caption">反発の速さ（レスポンス性）</div>
+    </div>
+    <div class="cv-bar-row">
+      <div style="display:flex; gap:0.5rem; align-items:center; font-size:0.75rem; color:#64748b; margin-bottom:0.2rem;">
+        <span style="width:80px; flex-shrink:0;">SB3</span>
+        <div class="cv-bar-track" style="flex:1;"><div class="cv-bar-fill" style="width:88%; background:linear-gradient(to right,#00e6b4,#0b7a61);"></div></div>
+        <span style="width:30px; text-align:right; font-weight:700; color:#0b7a61;">高</span>
+      </div>
+      <div style="display:flex; gap:0.5rem; align-items:center; font-size:0.75rem; color:#64748b;">
+        <span style="width:80px; flex-shrink:0;">メガブラスト</span>
+        <div class="cv-bar-track" style="flex:1;"><div class="cv-bar-fill" style="width:68%; background:linear-gradient(to right,#64748b,#334155);"></div></div>
+        <span style="width:30px; text-align:right; font-weight:700; color:#334155;">中高</span>
+      </div>
+      <div class="cv-bar-caption">用途の汎用性（ペース域の広さ）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MEGABLAST OFFICIAL IMAGE ===== -->
+<div class="cv-img-block cv-mb">
+  <img
+    src="https://assets.asics.com/system/media_libraries/24988/file.jpg"
+    class="cv-img-main cv-img-landscape"
+    alt="asics-megablast-official-product-2025"
+    loading="lazy"
+  >
+  <div class="cv-img-credit">© ASICS / corp.asics.com — 公式プレス素材</div>
+</div>
+
+<!-- ===== FIT & UPPER ===== -->
+<div class="cv-card cv-mb">
+  <div class="cv-card-title">
+    <i class="fa-solid fa-shoe-prints" style="color:#00e6b4;"></i> フィット感とアッパー
+  </div>
+  <p class="cv-body">両モデルともエンジニアードウーブンアッパーを採用しており、軽量かつ通気性に優れた設計となっている。レビュアーがUKサイズ8（約26.5cm）で両モデルを実走した結果、どちらも快適に着用できたと述べている。</p>
+  <p class="cv-body">主な差異はトゥボックス（つま先部分）にある。メガブラストはつま先の高さ方向のスペースがやや狭く、「トゥが上部に擦れる」という声が一部のランナーから報告されている。一方、スーパーブラスト3は前足部のゆとりが若干大きく、幅広の足やつま先に余裕を求めるランナーに向く。</p>
+  <p class="cv-body">幅方向は両モデルとも標準的で、平均的な足幅のランナーなら問題なく着用できる。ミッドフットのホールド感はスーパーブラスト3がやや余裕のある設計で、細めの足には若干大きく感じる場合もある。その際は紐をしっかり締めることで対応可能だ。</p>
+  <div class="cv-grid-2" style="gap:0.875rem; margin-top:0.875rem;">
+    <div style="background:#f0fbf8; border:1px solid #b2ead8; border-radius:0.75rem; padding:1rem;">
+      <div style="font-size:0.875rem; font-weight:800; color:#0f172a; margin-bottom:0.6rem;">スーパーブラスト3</div>
+      <div style="font-size:0.82rem; color:#334155; line-height:1.6;">
+        <div style="margin-bottom:0.35rem;"><i class="fa-solid fa-circle-check" style="color:#22c55e; margin-right:0.35rem;"></i>前足部のゆとりあり</div>
+        <div style="margin-bottom:0.35rem;"><i class="fa-solid fa-circle-check" style="color:#22c55e; margin-right:0.35rem;"></i>ガセットタン＋ウィングシステム</div>
+        <div><i class="fa-solid fa-circle-check" style="color:#22c55e; margin-right:0.35rem;"></i>厚みのあるタン・パッディング</div>
+      </div>
+    </div>
+    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:0.75rem; padding:1rem;">
+      <div style="font-size:0.875rem; font-weight:800; color:#0f172a; margin-bottom:0.6rem;">メガブラスト</div>
+      <div style="font-size:0.82rem; color:#334155; line-height:1.6;">
+        <div style="margin-bottom:0.35rem;"><i class="fa-solid fa-circle-check" style="color:#22c55e; margin-right:0.35rem;"></i>レース用シューズ並みの軽量アッパー</div>
+        <div style="margin-bottom:0.35rem;"><i class="fa-solid fa-circle-check" style="color:#22c55e; margin-right:0.35rem;"></i>薄型ガセットタンで通気性高い</div>
+        <div><i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b; margin-right:0.35rem;"></i>つま先高さのゆとりやや少なめ</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PERFORMANCE / RIDE CHARACTER ===== -->
+<div class="cv-dark cv-mb">
+  <div class="cv-card-title" style="color:white; margin-bottom:1.25rem;">
+    <i class="fa-solid fa-gauge-high" style="color:#00e6b4;"></i> 走行特性と適したペース帯
+  </div>
+
+  <p style="color:#cbd5e1; font-size:0.875rem; line-height:1.7; margin-bottom:1.5rem;">両モデルを実際にフルマラソン（3時間30分ペース）で使用したレビュアーは、両足ともゴール後に「脚が元気だった」と語るほど、どちらも長距離での快適性は高い。ただし、走行特性とペース帯の得意・不得意には明確な違いがある。</p>
+
+  <div class="cv-grid-2" style="gap:1rem; margin-bottom:1.25rem;">
+    <div class="cv-hier">
+      <div class="cv-hier-cat" style="color:#7ef0d6;">スーパーブラスト3</div>
+      <div class="cv-hier-name">✓ 得意なペース帯</div>
+      <div class="cv-hier-body">
+        <div style="margin-bottom:0.4rem;">・ イージーラン（ゆっくり目の回復走）</div>
+        <div style="margin-bottom:0.4rem;">・ テンポ走・マラソンペース（約5:00〜5:30/km 前後）</div>
+        <div>・ 長距離レース（フルマラソン 3:30〜4:00 クラス）</div>
+      </div>
+    </div>
+    <div class="cv-hier">
+      <div class="cv-hier-cat" style="color:#94a3b8;">スーパーブラスト3</div>
+      <div class="cv-hier-name" style="color:#f87171;">✗ 不得意な用途</div>
+      <div class="cv-hier-body">
+        <div style="margin-bottom:0.4rem;">・ インターバル走・ショートレペ（200m・400m）</div>
+        <div>・ プレートシューズに近い「キレ」を求める場面</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cv-grid-2" style="gap:1rem;">
+    <div class="cv-hier cv-hier-center">
+      <div class="cv-hier-cat" style="color:#00e6b4;">メガブラスト</div>
+      <div class="cv-hier-name">✓ 得意なペース帯</div>
+      <div class="cv-hier-body" style="color:#e2e8f0;">
+        <div style="margin-bottom:0.4rem;">・ インターバル走・200〜400mレペティション</div>
+        <div style="margin-bottom:0.4rem;">・ テンポ走・スピードセッション</div>
+        <div>・ 高速マラソン（サブ3〜3:15 クラス）のトレーニング全般</div>
+      </div>
+    </div>
+    <div class="cv-hier">
+      <div class="cv-hier-cat" style="color:#94a3b8;">メガブラスト</div>
+      <div class="cv-hier-name" style="color:#f87171;">✗ 相対的な弱点</div>
+      <div class="cv-hier-body">
+        <div style="margin-bottom:0.4rem;">・ ゆっくりしたペースのイージーランでは恩恵を感じにくい</div>
+        <div>・ 前足部に余裕を求める人には窮屈に感じる場合がある</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== OUTSOLE ===== -->
+<div class="cv-tinted cv-mb">
+  <div class="cv-card-title">
+    <i class="fa-solid fa-grip" style="color:#0b5563;"></i> アウトソール耐久性とグリップ
+  </div>
+  <p class="cv-body" style="color:#0f172a;">両モデルともアシックス独自の<strong>アシックスグリップ（ASICSGRIP）</strong>ラバーを採用しており、湿路面でも高いトラクションを発揮する。レビュアーは雨天時も含めてグリップの問題は一切なかったと報告している。</p>
+  <p class="cv-body" style="color:#0f172a;">両モデルを比較した場合、メガブラストのアウトソールはラバーカバレッジがやや多く、耐久性の面でわずかに優位との評価がある。スーパーブラスト3も同等の堅牢性を持ちながら前足部に露出フォームを採用しているため、高負荷の使用では長期的な摩耗に注意したい。</p>
+  <div class="cv-ins-green" style="margin-bottom:0;">
+    <strong>✅ グリップ評価：</strong>どちらも市街地・濡れた路面での不安感はなし。メガブラストはやや耐久性優位との評価が複数見られる。
+  </div>
+</div>
+
+<!-- ===== PROS / CONS ===== -->
+<div class="cv-card cv-mb">
+  <div class="cv-card-title">
+    <i class="fa-solid fa-scale-balanced" style="color:#00e6b4;"></i> 長所と短所
+  </div>
+  <div style="font-size:0.875rem; font-weight:700; color:#0f172a; margin-bottom:0.75rem;">スーパーブラスト3</div>
+  <div class="cv-pros-cons" style="margin-bottom:1.25rem;">
+    <div class="cv-pros">
+      <div class="cv-pct cv-pct-pro"><i class="fa-solid fa-thumbs-up"></i> 長所</div>
+      <div class="cv-pcl">
+        <div class="cv-pci cv-pci-pro"><i class="fa-solid fa-circle-check cv-pci-icon-pro"></i><span>FFリープ採用でより柔らかく弾むようになった。前作比で反発性15.2%向上（アシックス公式）</span></div>
+        <div class="cv-pci cv-pci-pro"><i class="fa-solid fa-circle-check cv-pci-icon-pro"></i><span>イージーランからテンポ走まで幅広いペース帯に対応。1足での日常使いに最適</span></div>
+        <div class="cv-pci cv-pci-pro"><i class="fa-solid fa-circle-check cv-pci-icon-pro"></i><span>トゥボックスのゆとりがあり、フィット感に妥協のないランナーにも安心</span></div>
+        <div class="cv-pci cv-pci-pro"><i class="fa-solid fa-circle-check cv-pci-icon-pro"></i><span>フルマラソン（3:30〜4:00目安）でも高い快適性を実現</span></div>
+      </div>
+    </div>
+    <div class="cv-cons">
+      <div class="cv-pct cv-pct-con"><i class="fa-solid fa-thumbs-down"></i> 短所</div>
+      <div class="cv-pcl">
+        <div class="cv-pci cv-pci-con"><i class="fa-solid fa-circle-xmark cv-pci-icon-con"></i><span>プレートなしのため、インターバル走のような急速なペース変化には不向き</span></div>
+        <div class="cv-pci cv-pci-con"><i class="fa-solid fa-circle-xmark cv-pci-icon-con"></i><span>FFリープの柔らかさが「キレ」を求めるランナーには物足りなく感じることも</span></div>
+        <div class="cv-pci cv-pci-con"><i class="fa-solid fa-circle-xmark cv-pci-icon-con"></i><span>高価格帯の製品であり、より手頃なノヴァブラストと比較されることがある</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="font-size:0.875rem; font-weight:700; color:#0f172a; margin-bottom:0.75rem;">メガブラスト</div>
+  <div class="cv-pros-cons">
+    <div class="cv-pros">
+      <div class="cv-pct cv-pct-pro"><i class="fa-solid fa-thumbs-up"></i> 長所</div>
+      <div class="cv-pcl">
+        <div class="cv-pci cv-pci-pro"><i class="fa-solid fa-circle-check cv-pci-icon-pro"></i><span>FF TURBO²の高速な反発がインターバル走やテンポ走で威力を発揮</span></div>
+        <div class="cv-pci cv-pci-pro"><i class="fa-solid fa-circle-check cv-pci-icon-pro"></i><span>スーパーブラスト3より15g軽く、同等以上の高スタックを実現</span></div>
+        <div class="cv-pci cv-pci-pro"><i class="fa-solid fa-circle-check cv-pci-icon-pro"></i><span>スピードシューズの代替や、プレートが苦手なランナーのレース用としても活用可能</span></div>
+        <div class="cv-pci cv-pci-pro"><i class="fa-solid fa-circle-check cv-pci-icon-pro"></i><span>アシックスグリップのトラクションが特に優秀で、雨天時も安心</span></div>
+      </div>
+    </div>
+    <div class="cv-cons">
+      <div class="cv-pct cv-pct-con"><i class="fa-solid fa-thumbs-down"></i> 短所</div>
+      <div class="cv-pcl">
+        <div class="cv-pci cv-pci-con"><i class="fa-solid fa-circle-xmark cv-pci-icon-con"></i><span>ゆっくりしたペースでは反発特性が活かしにくく、イージーランには向かない</span></div>
+        <div class="cv-pci cv-pci-con"><i class="fa-solid fa-circle-xmark cv-pci-icon-con"></i><span>前足部のトゥボックスがやや窮屈で、幅広の足や指先に余裕を求めるランナーから指摘がある</span></div>
+        <div class="cv-pci cv-pci-con"><i class="fa-solid fa-circle-xmark cv-pci-icon-con"></i><span>単層フォーム設計のため、超長距離での疲労感が蓄積するとスーパーブラスト3より劣る場合も</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BLAST SERIES HIERARCHY ===== -->
+<div class="cv-dark cv-mb">
+  <div class="cv-card-title" style="color:white; margin-bottom:1.25rem;">
+    <i class="fa-solid fa-layer-group" style="color:#00e6b4;"></i> アシックス BLASTシリーズの位置づけ
+  </div>
+  <p style="color:#94a3b8; font-size:0.83rem; line-height:1.6; margin-bottom:1.25rem;">用途に応じて選ぶためのシリーズ全体像。スーパーブラスト3はちょうど中間の「万能」ゾーンに位置する。</p>
+  <div class="cv-grid-2" style="gap:0.75rem; margin-bottom:1rem;">
+    <div class="cv-hier">
+      <div class="cv-hier-cat" style="color:#94a3b8;">デイリーバウンス</div>
+      <div class="cv-hier-name">ノヴァブラスト5</div>
+      <div class="cv-hier-body">柔らかく弾む日常練習向けトレーナー</div>
+    </div>
+    <div class="cv-hier cv-hier-center">
+      <div class="cv-hier-cat" style="color:#00e6b4;">ロングランバウンス</div>
+      <div class="cv-hier-name" style="color:#00e6b4;">スーパーブラスト3</div>
+      <div class="cv-hier-body" style="color:#e2e8f0;">イージーランからテンポ走まで対応。最も汎用性が高い</div>
+    </div>
+    <div class="cv-hier cv-hier-center">
+      <div class="cv-hier-cat" style="color:#00e6b4;">アルティメットバウンス</div>
+      <div class="cv-hier-name" style="color:#00e6b4;">メガブラスト</div>
+      <div class="cv-hier-body" style="color:#e2e8f0;">スピードセッション・レーシング志向。反発重視</div>
+    </div>
+    <div class="cv-hier">
+      <div class="cv-hier-cat" style="color:#94a3b8;">プレート搭載スピード</div>
+      <div class="cv-hier-name">ソニックブラスト</div>
+      <div class="cv-hier-body">ASTROPLATEとFF TURBO²の組み合わせでスピード最重視</div>
+    </div>
+  </div>
+  <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:0.625rem; padding:0.875rem; font-size:0.82rem; color:#94a3b8; line-height:1.65;">
+    <strong style="color:#7ef0d6;">メガブラストの上には：</strong> メタスピード スカイ東京（カーボンプレート搭載レーシングシューズ）が位置する。サブ3を狙うランナーのレース本番向け。
+  </div>
+</div>
+
+<!-- ===== SB3 DETAIL IMAGE ===== -->
+<div class="cv-img-block cv-mb">
+  <img
+    src="https://assets.asics.com/system/media_libraries/25478/file.jpg"
+    class="cv-img-main cv-img-landscape"
+    alt="asics-superblast-3-detail-official-2026"
+    loading="lazy"
+  >
+  <div class="cv-img-credit">© ASICS / corp.asics.com — 公式プレス素材</div>
+</div>
+
+<!-- ===== PULL QUOTE ===== -->
+<div style="border-left:4px solid #00e6b4; padding:1rem 1.5rem; background:#f0fbf8; border-radius:0 0.75rem 0.75rem 0; margin:0 0 1.5rem;">
+  <p style="font-size:1.05rem; font-style:italic; font-weight:600; color:#0c2340; line-height:1.65; margin:0;">「もし1足だけ選ぶとしたら、メガブラストを選ぶ。しかしスーパーブラスト3は、多くのランナーにとって正解となり得るシューズだ。」</p>
+  <p style="font-size:0.8rem; color:#64748b; margin-top:0.5rem; margin-bottom:0;">— Run Testersレビュアー Tommy によるフルマラソン実走後の所感（意訳）</p>
+</div>
+
+<!-- ===== VERDICT ===== -->
+<div class="cv-dark cv-mb">
+  <div class="cv-card-title" style="color:white; margin-bottom:1rem;">
+    <i class="fa-solid fa-flag-checkered" style="color:#00e6b4;"></i> 総合評価：どちらを選ぶべきか
+  </div>
+  <p style="color:#cbd5e1; font-size:0.875rem; line-height:1.7; margin-bottom:1.25rem;">2足を一度に購入しようとしているなら話は別だが、「どちらか1足」で選ぶ場合、答えはランニングスタイルによって明確に分かれる。</p>
+
+  <div class="cv-grid-2" style="gap:0.875rem; margin-bottom:1.25rem;">
+    <div class="cv-vbox" style="border-color:rgba(0,230,180,0.3);">
+      <div class="cv-vtitle" style="color:#4ade80;">✓ スーパーブラスト3が向いている人</div>
+      <ul class="cv-vlist">
+        <li>イージーランからテンポ走まで1足でこなしたい</li>
+        <li>フルマラソン3:30〜4:00ペース前後でのレース・長練習</li>
+        <li>柔らかくて弾むような乗り心地が好き</li>
+        <li>週あたりのイージー走の割合が多いランナー</li>
+        <li>つま先まわりにゆとりを求める</li>
+      </ul>
+    </div>
+    <div class="cv-vbox" style="border-color:rgba(0,230,180,0.3);">
+      <div class="cv-vtitle" style="color:#4ade80;">✓ メガブラストが向いている人</div>
+      <ul class="cv-vlist">
+        <li>インターバル走・レペティションなどスピード練習が中心</li>
+        <li>フルマラソン3:00〜3:15レベルのトレーニングに活用</li>
+        <li>レーシングシューズが苦手でカーボンプレートを避けたい</li>
+        <li>軽量性を最優先したい（同等スタックで15g軽い）</li>
+        <li>速くなるほど反発が高まる「テンションが上がる」靴が欲しい</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="background:rgba(0,230,180,0.08); border:1px solid rgba(0,230,180,0.2); border-radius:0.75rem; padding:1rem; font-size:0.875rem; color:#e2e8f0; line-height:1.7;">
+    <strong style="color:#00e6b4;">📊 最終判断：</strong>多くのランナーがどちらか1足を選ぶ際は、自分の主要練習メニューを基準にするとよい。週に3〜4回イージーラン＋週1テンポ走ならスーパーブラスト3。週に複数回スピードセッションをこなすならメガブラスト。「両足が違う用途に存在している」というのがアシックス自身の設計思想でもある。
+  </div>
+</div>
+
+<!-- ===== SOURCE ===== -->
+<div class="cv-source">
+  <i class="fa-brands fa-youtube" style="font-size:1.75rem; color:#ff0000; flex-shrink:0;"></i>
+  <div>
+    <div class="cv-source-lbl">参考動画（英語）</div>
+    <a class="cv-source-link" href="https://www.youtube.com/watch?v=" target="_blank" rel="noopener">Run Testers — Asics Superblast 3 Vs Asics Megablast（YouTube）</a>
+  </div>
+</div>
+
+<!-- ===== ATTRIBUTION FOOTER ===== -->
+<div style="padding:0.75rem 1rem; font-size:0.7rem; color:#94a3b8; line-height:1.7; border-top:1px solid #e2e8f0; margin-top:0.5rem;">
+  <strong style="color:#64748b;">画像出典：</strong>本ページの製品画像はASICS（アシックス）の公式プレスリリース素材（corp.asics.com）を使用しています。画像の著作権はASICSに帰属します。本記事はASICSとは独立したレビュー・比較記事であり、ブランドとは関係ありません。<br>
+  <strong style="color:#64748b;">スペックデータ出典：</strong>アシックス公式プレスリリース（2026年2月）、Canadian Running Magazine、Believe in the Run、Doctors of Running、RunRepeat、Running Warehouse、Six Minute Mile、Running Lab。
+</div>
+
+</div><!-- /cv-container -->
+</div><!-- /content-visual -->
