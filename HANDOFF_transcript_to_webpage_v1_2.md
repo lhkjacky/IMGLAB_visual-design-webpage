@@ -853,12 +853,12 @@ WordPress already provides horizontal page margins. The block must never add ext
 }
 ```
 
-### Full-Width Flush Cards on Mobile
-Cards must go edge-to-edge on mobile — no rounded corners on sides, no side borders:
+### Full-Width Flush Cards on Mobile — Rounded Corners Preserved
+Cards must go edge-to-edge on mobile (no side borders) but **keep rounded corners**:
 ```css
 @media (max-width: 640px) {
   .content-visual .cv-card {
-    border-radius: 0;
+    border-radius: 1rem;
     border-left: none;
     border-right: none;
     padding: 1.25rem 1rem;
