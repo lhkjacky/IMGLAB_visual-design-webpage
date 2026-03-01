@@ -10,88 +10,76 @@ If anything in the transcript is ambiguous, make the best editorial judgment and
 
 ---
 
-## ⚡ WHAT'S NEW IN v2.0 — READ BEFORE ANYTHING ELSE
+## ⚡ WHAT'S NEW IN v2.0 — READ BEFORE STARTING
 
-**The site now has a global shared stylesheet loaded by the WordPress child theme (`woodmart-child/style.css`). This changes what goes in each post's `<style>` block.**
+**The site now has a global shared stylesheet (`woodmart-child/style.css`) loaded on every page by the WordPress child theme. This changes what the per-post `<style>` block must contain.**
 
-### What the global stylesheet already handles (do NOT repeat in the post `<style>`):
+### What the global stylesheet already handles — do NOT repeat any of this in the post `<style>`:
 
-- All CSS reset rules
-- All layout: `.cv-container`, `.cv-mb`, grids (`.cv-grid-2/3/4`), `.cv-pros-cons`
-- All card base styles: `.cv-card`, `.cv-dark`, `.cv-wow`
-- All typography: `.cv-h1`, `.cv-hero-badge`, `.cv-hero-stats`, `.cv-stat-val`, `.cv-stat-label`, `.cv-hero-sub`
-- All tables: `.cv-table`, `.cv-tr-hl`, `.cv-tbl-pc`, `.cv-tbl-mobile`
-- Dark table overrides: `.cv-dark .cv-table td`, `.cv-dark .cv-tr-hl td` etc.
-- All pros/cons: `.cv-pros`, `.cv-cons`, `.cv-pci`, `.cv-pct` etc.
-- All progress bars: `.cv-bar-row`, `.cv-bar-track`, `.cv-bar-fill`, `.cv-bar-lbl`
-- All insight boxes: `.cv-ins-blue`, `.cv-ins-green`, `.cv-ins-amber`
-- `.cv-ins-dark` base styles (background and border using hardcoded fallback)
-- All timeline: `.cv-timeline`, `.cv-tl-item`, `.cv-tl-dot`, `.cv-tl-year` etc.
-- All tags: `.cv-tag-blue/green/red/amber/purple`
-- All verdict: `.cv-vbox`, `.cv-vlist`
-- All hierarchy cards: `.cv-hier`, `.cv-hier-name`, `.cv-hier-body`
-- All competitor cards: `.cv-cc`, `.cv-cctag-pro/con`
-- All mobile spec cards: `.cv-sc-row`, `.cv-sc-new`, `.cv-sc-old`
-- All source note: `.cv-source`, `.cv-source-link`
-- All Noto icon sizes: `.cv-noto-lg/md/sm`
-- All WP Dark Mode universal overrides for the above (the global `[data-wp-dark-mode-ignore]` block)
-- The full mobile breakpoint `@media (max-width: 640px)` for all of the above
-- Font Awesome is loaded globally — **do NOT add a Font Awesome `<link>` tag in the post**
+- CSS reset (`box-sizing`, `margin`, `padding`)
+- Container (`.cv-container`), spacing (`.cv-mb`), all grids (`.cv-grid-2/3/4`)
+- All card base styles: `.cv-card`, `.cv-dark`, `.cv-wow`, `.cv-tinted`
+- All hero layout: `.cv-hero`, `.cv-hero::before`, `.cv-hero-badge`, `.cv-h1`, `.cv-h1-accent`, `.cv-hero-sub`, `.cv-hero-stats`, `.cv-hero-stat`, `.cv-stat-val`, `.cv-stat-label`
+- All tables: `.cv-table-wrap`, `.cv-table`, `.cv-tr-hl`, `.cv-tbl-pc`, `.cv-tbl-mobile`, and dark section table overrides
+- All pros/cons, progress bars, tags, timeline, verdict boxes, hierarchy cards, competitor cards, mobile spec cards, source note, Noto icon size classes
+- All WP Dark Mode `[data-wp-dark-mode-ignore]` overrides for fixed-color rules (cards, pros/cons, source, img blocks, dark section, etc.)
+- Full `@media (max-width: 640px)` breakpoint for all of the above
+- **Font Awesome loaded globally via `functions.php` — do NOT add a `<link>` tag in the post**
 
-### What each post's `<style>` block MUST still contain:
+### What each post `<style>` block must still contain (and ONLY this):
 
-The post `<style>` block is now small. It contains **only** the things that are unique to that article's palette and cannot be in the global stylesheet:
+1. **CSS variables** — the 11 per-article palette values
+2. **Per-post WP Dark Mode variable overrides** — rules that depend on per-article colors (hero gradient, wow gradient, accent, tints). The global sheet cannot know these.
+3. **`.cv-ins-dark` text color override** — global sheet sets background/border only; text color is accent-dependent, set it per post
+4. **CSS for image components if used** — `.cv-img-block`, `.cv-img-trio`, `.cv-img-duo` and their mobile rules (not in global sheet)
+5. **`.cv-warn` CSS if used** — not in global sheet
+6. **Any truly unique one-off additions** only this post needs
 
-**1. CSS variables block (required for every post):**
-```html
-<style>
+**The post `<style>` block should be 10–25 lines. If it exceeds 30 lines, you are duplicating global CSS — stop and remove it.**
+
+### Correct minimal per-post `<style>` template:
+
+```css
+/* Per-post palette — all base component CSS is in woodmart-child/style.css */
 .content-visual {
-  --cv-accent: [vivid accent color];
-  --cv-hero-bg: linear-gradient(135deg, [stop1], [stop2], [stop3]);
-  --cv-hero-sub-color: [muted light color for hero subtitle and stat labels];
-  --cv-badge-color: [light color for hero badge text];
-  --cv-glow: rgba([accent-rgb], 0.18);
-  --cv-wow-bg: linear-gradient(135deg, [accent], [accent-dark]);
-  --cv-hl: [light accent tint for highlighted table rows, ~10% opacity on white];
-  --cv-img-border: [light accent tint for image block borders];
-  --cv-sc-new-bg: [light accent tint for mobile spec new model pill];
-  --cv-cc-featured-bg: [light accent tint for featured competitor card];
-  --cv-table-head-bg: [dark color for table header — usually #0f172a or accent-dark];
+  --cv-accent:          [vivid accent hex];
+  --cv-hero-bg:         linear-gradient(135deg, [stop1], [stop2], [stop3]);
+  --cv-hero-sub-color:  [muted light color for hero subtitle and stat labels];
+  --cv-badge-color:     [hero badge text color];
+  --cv-glow:            rgba([accent-r],[accent-g],[accent-b],0.18);
+  --cv-wow-bg:          linear-gradient(135deg, [accent], [accent-dark]);
+  --cv-hl:              [accent at ~10% opacity — highlighted table rows];
+  --cv-img-border:      [accent light border for image blocks];
+  --cv-sc-new-bg:       [accent tint for mobile spec new-model pill];
+  --cv-cc-featured-bg:  [accent tint for featured competitor card];
+  --cv-table-head-bg:   [dark color for table headers, usually #0f172a];
 }
-</style>
-```
 
-**2. WP Dark Mode per-post overrides (required — covers variable-driven rules the global sheet cannot override):**
-```css
-[data-wp-dark-mode-ignore] .cv-hero { background: var(--cv-hero-bg) !important; }
-[data-wp-dark-mode-ignore] .cv-wow { background: var(--cv-wow-bg) !important; }
-[data-wp-dark-mode-ignore] .cv-stat-val { color: var(--cv-accent) !important; }
-[data-wp-dark-mode-ignore] .cv-h1-accent { color: var(--cv-accent) !important; }
+/* WP Dark Mode overrides for variable-dependent rules */
+[data-wp-dark-mode-ignore] .cv-hero       { background: var(--cv-hero-bg) !important; }
+[data-wp-dark-mode-ignore] .cv-wow        { background: var(--cv-wow-bg) !important; }
+[data-wp-dark-mode-ignore] .cv-stat-val   { color: var(--cv-accent) !important; }
+[data-wp-dark-mode-ignore] .cv-h1-accent  { color: var(--cv-accent) !important; }
 [data-wp-dark-mode-ignore] .cv-card .cv-tr-hl td { background: var(--cv-hl) !important; }
-[data-wp-dark-mode-ignore] .cv-sc-new { background: var(--cv-sc-new-bg) !important; border-color: var(--cv-img-border) !important; }
+[data-wp-dark-mode-ignore] .cv-sc-new     { background: var(--cv-sc-new-bg) !important; border-color: var(--cv-img-border) !important; }
 [data-wp-dark-mode-ignore] .cv-sc-new .cv-sc-model { color: var(--cv-accent) !important; }
+[data-wp-dark-mode-ignore] .cv-ins-dark   { color: [accent-appropriate light color] !important; }
+
+/* Add cv-img-block / cv-img-trio / cv-img-duo CSS here if images are used in this post */
+/* Add cv-warn CSS here if a warning box is used in this post */
 ```
 
-**3. `.cv-ins-dark` text color (required — global sheet sets background/border only, text color is accent-dependent):**
-```css
-[data-wp-dark-mode-ignore] .cv-ins-dark { color: [accent-appropriate light color] !important; }
-```
+### ⚠️ Critical scoping rule for `.cv-tr-hl` (documented from a real bug):
 
-**4. Any per-article additions that don't exist in the global sheet** (e.g. special one-off component, custom font size tweak, unique layout variation). Keep these minimal.
-
-### Critical `cv-tr-hl` scoping rule (learned from a real bug):
-
-The highlighted row override in the post `<style>` **MUST be scoped to `.cv-card`**:
+The highlighted row override **must be scoped to `.cv-card`**. Without this scope it bleeds into `.cv-dark` section tables and makes text invisible against the dark background.
 
 ```css
-/* CORRECT — only affects white card tables, not dark section tables */
+/* ✅ CORRECT — only affects white card tables */
 [data-wp-dark-mode-ignore] .cv-card .cv-tr-hl td { background: var(--cv-hl) !important; }
 
-/* WRONG — bleeds into dark section tables, making light-background rows appear there too */
+/* ❌ WRONG — bleeds into dark section tables, text becomes invisible */
 [data-wp-dark-mode-ignore] .cv-tr-hl td { background: var(--cv-hl) !important; }
 ```
-
-The global stylesheet already handles `.cv-dark .cv-tr-hl` with its own correct colors. Scoping to `.cv-card` ensures the two never interfere.
 
 ---
 
@@ -162,7 +150,7 @@ Every unit conversion must be mathematically correct. Multiply by the correct co
 | oz (weight) | g | Multiply by 28.3495. Round to nearest gram. e.g. 8.8 oz = 250 g |
 | lbs | kg | Multiply by 0.453592. Round to 2 decimal places. |
 | inches | cm | Multiply by 2.54. Round to 1 decimal. |
-| °F | °C | (°F - 32) × 5/9. Round to 1 decimal. |
+| °F | °C | (°F − 32) × 5/9. Round to 1 decimal. |
 | fl oz | ml | Multiply by 29.5735. Round to nearest ml. |
 | min/mile (pace) | min/km | Divide by 1.60934. e.g. 6:00/mile = 3:44/km. **Critical:** treat "6:30" as 6 minutes 30 seconds (6.5 minutes total), not 6.3 minutes. Convert the seconds component separately to avoid errors. |
 
@@ -243,7 +231,7 @@ Instead of using this exact URL, the URL was modified — the size subfolder `/3
 Copy image URLs character-for-character from the source HTML. Do not modify, abbreviate, or restructure them in any way.
 
 **Step 2 — Verify every URL before including it.**
-Use the `web_fetch` tool to attempt to load each image URL. If `web_fetch` succeeds and returns image data, the URL is confirmed live. If it fails or returns an error, the URL is dead — do not use it.
+The AI environment cannot reach external networks via curl. Therefore: use the `web_fetch` tool to attempt to load each image URL. If `web_fetch` succeeds and returns image data, the URL is confirmed live. If it fails or returns an error, the URL is dead — do not use it.
 
 If `web_fetch` is unavailable or blocked for a specific URL, explicitly tell the user: *"I cannot verify this URL from my environment. Please test it in your browser before publishing."* Then include it as a candidate with a clear warning, not as a confirmed working link.
 
@@ -251,25 +239,45 @@ If `web_fetch` is unavailable or blocked for a specific URL, explicitly tell the
 A broken image in the published article is worse than no image. If you cannot confirm a URL works, omit it and note the omission to the user.
 
 **Step 4 — If the user confirms a URL pattern works, apply it consistently.**
-If the user tests a URL and confirms the pattern, you may apply that same correction to other IDs from the same CDN — but note in your response that you are doing so, and still ask the user to verify a sample before treating the whole batch as confirmed.
+If the user tests a URL and confirms the pattern (e.g. "without the size subfolder it works"), you may apply that same correction to other IDs from the same CDN — but note in your response that you are doing so, and still ask the user to verify a sample before treating the whole batch as confirmed.
 
 ### B4 — The Image Description Rule (CRITICAL — Past Mistakes Were Made Here)
 
+> **This rule was also violated in a past session. Fabricated descriptions were applied to images that had never been viewed.**
+
+#### The exact mistake that was made:
+Three images were labelled "Cobalt Burst / Light Orange", "White / Black", and "Seashell / Sun Coral" based on the press release text listing three colorways. None of those images had been viewed. The labels were completely invented. The images were actually all showing the same colorway from different angles — the labels were entirely wrong.
+
+#### The rule going forward:
+
 **You may only describe what you have actually seen.**
 
-- If you have **viewed the image** → you may write a specific descriptive label
+- If you have **viewed the image** (via image search, web fetch, or the user has shown it to you) → you may write a specific descriptive label (angle, colorway, feature shown)
 - If you have **not viewed the image** → use only a generic neutral label like「公式プロダクトショット」or「製品画像」— never guess at colorway, angle, or content
-- **Never infer visual content from filenames, ID numbers, or adjacent text.**
+- **Never infer visual content from filenames, ID numbers, or adjacent text.** A filename like `712946.jpg` tells you nothing about what color or angle is shown. A press release mentioning three colorways does not tell you which image ID corresponds to which colorway.
+- **Product codes can sometimes be decoded** — e.g. ASICS product code `1013A177-400` where `400` is a known ASICS color code for Cobalt Burst. This is acceptable to use as a label IF you have verified the color code convention from an authoritative source. But this is the exception, not the rule.
 
 #### Alt text doubles as the filename (Smart Auto Upload plugin):
-Write alt texts as clean, lowercase, hyphenated English descriptors:
+The user's WordPress setup uses "Smart Auto Upload Images" with `%image_alt%` as the filename pattern. This means the `alt` attribute of every `<img>` tag becomes the filename saved to the WordPress media library. Write alt texts as clean, lowercase, hyphenated English descriptors that will make good filenames:
 
 ✅ Good: `asics-superblast-3-cobalt-burst-light-orange-front`
-❌ Bad: `ASICS SUPERBLAST 3 — ミッドソール側面ビュー`
+✅ Good: `asics-superblast-3-midsole-lateral-official`
+✅ Good: `asics-superblast-3-running-lifestyle-2026`
+❌ Bad: `ASICS SUPERBLAST 3 — ミッドソール側面ビュー` (Japanese characters, special chars, caps)
+❌ Bad: `image1` (meaningless)
+❌ Bad: `asics-superblast-3-white-black-side` (if you haven't confirmed the image is white/black)
 
-Rules: lowercase only, hyphens, include brand + model + detail + year, no Japanese/special chars, max ~60 characters, describe only what you have confirmed.
+Rules for alt text filenames:
+- Lowercase only
+- Hyphens between words, no spaces or underscores
+- Include brand + model + descriptive detail + year if space allows
+- No Japanese characters, no special characters, no slashes
+- Max ~60 characters
+- Must reflect only what you have **actually confirmed** about the image
 
 ### B5 — Attribution (Required)
+
+These are editorial review articles using brand press images. Attribution is required on every image.
 
 **Inline credit under each image:**
 ```html
@@ -285,46 +293,117 @@ Rules: lowercase only, hyphens, include brand + model + detail + year, no Japane
 
 ### B6 — Mobile Image Behavior
 
-The global stylesheet already handles `.cv-img-block`, `.cv-img-main`, `.cv-img-landscape`, and their mobile rules. Do not repeat these in the post `<style>`.
+Images must work well on mobile. Apply these CSS rules for all image components:
 
-For image trios and duos, add only the CSS that is not in the global sheet:
-
-**3-column product image trio** (not in global sheet — add to post style if used):
+**Single full-width image:**
 ```css
-.content-visual .cv-img-trio { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; margin-bottom:1.5rem; }
-.content-visual .cv-img-trio-item { background:white; border-radius:0.875rem; overflow:hidden; border:1px solid var(--cv-img-border, #fbd0bf); }
-.content-visual .cv-img-trio-item .cv-img-main { aspect-ratio:1/1; object-fit:cover; }
-.content-visual .cv-img-trio-label { font-size:0.7rem; font-weight:600; color:#475569; text-align:center; padding:0.4rem 0.5rem 0.5rem; background:#f8fdfd; border-top:1px solid var(--cv-img-border, #fbd0bf); }
-@media (min-width:641px) and (max-width:900px) {
-  .content-visual .cv-img-trio { grid-template-columns:1fr 1fr; }
-  .content-visual .cv-img-trio-item:last-child { grid-column:span 2; }
-  .content-visual .cv-img-trio-item:last-child .cv-img-main { aspect-ratio:2/1; }
+.content-visual .cv-img-block {
+  background: white; border-radius: 1rem; overflow: hidden;
+  border: 1px solid [accent-tint-border]; margin-bottom: 1.5rem;
 }
-@media (max-width:640px) {
-  .content-visual .cv-img-trio { grid-template-columns:1fr; gap:0.5rem; margin-bottom:0.625rem; }
-  .content-visual .cv-img-trio-item { border-radius:0; border-left:none; border-right:none; }
-  .content-visual .cv-img-trio-item .cv-img-main { aspect-ratio:3/2; }
+.content-visual .cv-img-main { width: 100%; height: auto; display: block; object-fit: cover; }
+.content-visual .cv-img-landscape { max-height: 420px; object-fit: cover; object-position: center; }
+.content-visual .cv-img-credit {
+  font-size: 0.68rem; color: #94a3b8; padding: 0.45rem 1rem;
+  text-align: right; background: #f8fdfd; border-top: 1px solid [accent-tint-border];
+}
+.content-visual .cv-img-credit a { color: [accent-muted]; text-decoration: none; }
+
+@media (max-width: 640px) {
+  /* Keep rounded corners on mobile — edge-to-edge but still rounded */
+  .content-visual .cv-img-block { border-radius: 0.75rem; border-left: none; border-right: none; margin-bottom: 0.625rem; }
+  .content-visual .cv-img-landscape { max-height: 220px; }
 }
 ```
 
-**2-column image duo** (not in global sheet — add to post style if used):
+**3-column product image trio:**
 ```css
-.content-visual .cv-img-duo { display:grid; grid-template-columns:1fr 1fr; }
-.content-visual .cv-img-duo-item:first-child { border-right:1px solid var(--cv-img-border, #fbd0bf); }
-.content-visual .cv-img-duo-item .cv-img-main { aspect-ratio:4/3; object-fit:cover; }
-.content-visual .cv-img-duo-label { font-size:0.68rem; color:#64748b; padding:0.4rem 0.75rem 0.5rem; background:#f8fdfd; border-top:1px solid var(--cv-img-border, #fbd0bf); line-height:1.4; min-height:2.2rem; display:flex; align-items:center; }
-@media (max-width:640px) {
-  .content-visual .cv-img-duo { grid-template-columns:1fr; }
-  .content-visual .cv-img-duo-item:first-child { border-right:none; border-bottom:1px solid var(--cv-img-border, #fbd0bf); }
-  .content-visual .cv-img-duo-item .cv-img-main { aspect-ratio:3/2; }
+.content-visual .cv-img-trio {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.5rem;
 }
+.content-visual .cv-img-trio-item {
+  background: white; border-radius: 0.875rem; overflow: hidden; border: 1px solid [accent-tint-border];
+}
+.content-visual .cv-img-trio-item .cv-img-main { aspect-ratio: 1/1; object-fit: cover; }
+.content-visual .cv-img-trio-label {
+  font-size: 0.7rem; font-weight: 600; color: #475569;
+  text-align: center; padding: 0.4rem 0.5rem 0.5rem;
+  background: #f8fdfd; border-top: 1px solid [accent-tint-border];
+}
+
+/* Tablet: 2 columns */
+@media (min-width: 641px) and (max-width: 900px) {
+  .content-visual .cv-img-trio { grid-template-columns: 1fr 1fr; }
+  .content-visual .cv-img-trio-item:last-child { grid-column: span 2; }
+  .content-visual .cv-img-trio-item:last-child .cv-img-main { aspect-ratio: 2/1; }
+}
+
+/* Mobile: single column — product images are too small at 3-col on phone */
+@media (max-width: 640px) {
+  .content-visual .cv-img-trio { grid-template-columns: 1fr; gap: 0.5rem; margin-bottom: 0.625rem; }
+  .content-visual .cv-img-trio-item { border-radius: 0; border-left: none; border-right: none; }
+  .content-visual .cv-img-trio-item .cv-img-main { aspect-ratio: 3/2; }
+}
+```
+
+**2-column image duo (side-by-side detail shots):**
+```css
+.content-visual .cv-img-duo { display: grid; grid-template-columns: 1fr 1fr; }
+.content-visual .cv-img-duo-item:first-child { border-right: 1px solid [accent-tint-border]; }
+.content-visual .cv-img-duo-item .cv-img-main { aspect-ratio: 4/3; object-fit: cover; }
+.content-visual .cv-img-duo-label {
+  font-size: 0.68rem; color: #64748b; padding: 0.4rem 0.75rem 0.5rem;
+  background: #f8fdfd; border-top: 1px solid [accent-tint-border]; line-height: 1.4;
+  min-height: 2.2rem; display: flex; align-items: center;
+}
+
+/* Mobile: stack vertically */
+@media (max-width: 640px) {
+  .content-visual .cv-img-duo { grid-template-columns: 1fr; }
+  .content-visual .cv-img-duo-item:first-child { border-right: none; border-bottom: 1px solid [accent-tint-border]; }
+  .content-visual .cv-img-duo-item .cv-img-main { aspect-ratio: 3/2; }
+}
+```
+
+**HTML structure for each image component:**
+```html
+<!-- Single landscape image -->
+<div class="cv-img-block cv-mb">
+  <img src="[verified URL]" alt="[brand-model-description-year]" class="cv-img-main cv-img-landscape">
+  <div class="cv-img-credit">© [Brand] / <a href="[source URL]" target="_blank" rel="noopener">[Source Name]</a></div>
+</div>
+
+<!-- 3-column trio -->
+<div class="cv-img-trio cv-mb">
+  <div class="cv-img-trio-item">
+    <img src="[verified URL]" alt="[brand-model-detail]" class="cv-img-main">
+    <div class="cv-img-trio-label">[Label — only if visually confirmed]</div>
+  </div>
+  <!-- repeat × 2 -->
+  <div class="cv-img-credit" style="grid-column:1/-1;">© [Brand] / [Source]</div>
+</div>
+
+<!-- 2-column duo -->
+<div class="cv-img-block cv-mb">
+  <div class="cv-img-duo">
+    <div class="cv-img-duo-item">
+      <img src="[verified URL]" alt="[brand-model-detail-1]" class="cv-img-main">
+      <div class="cv-img-duo-label">[Label — only if visually confirmed]</div>
+    </div>
+    <div class="cv-img-duo-item">
+      <img src="[verified URL]" alt="[brand-model-detail-2]" class="cv-img-main">
+      <div class="cv-img-duo-label">[Label — only if visually confirmed]</div>
+    </div>
+  </div>
+  <div class="cv-img-credit">© [Brand] / [Source]</div>
+</div>
 ```
 
 ---
 
 ## 🏗️ PHASE C — HTML STRUCTURE & FILE RULES
 
-> **These rules are mandatory and non-negotiable.**
+> **These rules are mandatory and non-negotiable. Violating them causes broken WordPress excerpts, dark mode failures, and mobile layout bugs.**
 
 ### C1 — MANDATORY FILE STRUCTURE ORDER
 
@@ -332,20 +411,55 @@ For image trios and duos, add only the CSS that is not in the global sheet:
 
 ```
 LINE 1:   <div class="content-visual" data-wp-dark-mode-ignore="true">
-LINE 2:   <!-- Article comment — NO Font Awesome link (it's loaded globally) -->
+LINE 2:   <!-- Article comment — NO Font Awesome link tag, loaded globally by functions.php -->
 LINE 3+:  ALL HTML CONTENT (hero, cards, sections, images, footer...)
 NEAR END: </div><!-- /cv-container -->
           </div><!-- /content-visual -->
-LAST:     <style> ... per-post CSS variables and overrides only ... </style>
+LAST:     <style> ... per-post CSS variables + WP Dark Mode variable overrides only ... </style>
 ```
 
-**Why this order is mandatory:** WordPress Custom HTML blocks use the first few lines of text as the post excerpt. If `<style>` appears before the HTML content, raw CSS becomes the excerpt.
+**Why this order is mandatory:** WordPress Custom HTML blocks use the first few lines of text as the post excerpt. If `<style>` appears before the HTML content, raw CSS (including comments like `/* ===== WP DARK MODE PROTECTION =====`) becomes the excerpt — ugly and broken for readers.
 
-> ⛔ Do NOT add a `<link>` tag for Font Awesome. It is loaded globally by `functions.php`.
+**The `<div class="content-visual">` must be the absolute first line of the file.**
+**The `<style>` block must be the absolute last thing in the file.**
+
+> ⛔ WRONG:
+> ```html
+> <div class="content-visual">
+> <link ...>
+> <style>/* CSS */</style>
+> <!-- content starts AFTER style — WRONG -->
+> ```
+
+> ✅ CORRECT:
+> ```html
+> <div class="content-visual" data-wp-dark-mode-ignore="true">
+> <!-- Title | WordPress Block — Font Awesome loaded globally, no <link> needed -->
+> <div class="cv-container">
+> <!-- all article content here -->
+> </div>
+> </div>
+>
+> <style>
+> /* per-post CSS variables + WP Dark Mode variable overrides only */
+> /* all base component CSS is in woodmart-child/style.css — do not repeat it */
+> </style>
+> ```
 
 ### C2 — WP DARK MODE COMPATIBILITY
 
-The site uses **WP Dark Mode plugin v5.0.9 (Sapphire preset)**. The global stylesheet handles most overrides. The post `<style>` handles the remaining palette-specific overrides.
+The site uses **WP Dark Mode plugin v5.0.9 (Sapphire preset)**. This plugin applies `background-color` and `color` with `!important` to every HTML element by tag name when dark mode is active. Without protection it will override all card backgrounds and text colors.
+
+#### How the plugin works:
+
+The plugin's rule is roughly:
+```css
+html.wp-dark-mode-active body div:not(.wp-dark-mode-ignore) {
+  background: var(--wp-dark-mode-secondary-background-color, #212121) !important;
+}
+```
+
+The `:not(.wp-dark-mode-ignore)` check requires the class **directly on the element itself** — a parent having it does NOT protect children.
 
 #### Protection strategy:
 
@@ -353,67 +467,191 @@ The site uses **WP Dark Mode plugin v5.0.9 (Sapphire preset)**. The global style
 ```html
 <div class="content-visual" data-wp-dark-mode-ignore="true">
 ```
+This gives us `[data-wp-dark-mode-ignore]` as a high-specificity ancestor selector in CSS.
 
 **Part 2 — `wp-dark-mode-ignore` on every element:**
-Every `div`, `p`, `span`, `strong`, `i`, `h1`–`h6`, `ul`, `ol`, `li`, `table`, `th`, `td` etc. must have `wp-dark-mode-ignore` in its class list — **except `cv-container`**.
+Every `div`, `p`, `span`, `strong`, `i`, `h1`–`h6`, `ul`, `ol`, `li` in the HTML body must have `wp-dark-mode-ignore` in its class list — **except `cv-container`** (see Part 3).
 
-> ⛔ **`<i>` tags are the single most commonly missed element.** Always add `wp-dark-mode-ignore` to every `<i>` tag.
+> ⛔ **DOCUMENTED MISTAKE (v1.4 → v1.5) — `data-wp-dark-mode-ignore` attribute used instead of `wp-dark-mode-ignore` class.**
+> The plugin's `:not(.wp-dark-mode-ignore)` check reads the **class list only**. A `data-` attribute on the same element is invisible to it. Writing `<div class="cv-card" data-wp-dark-mode-ignore="true">` gives zero protection — the plugin sees a div with no `wp-dark-mode-ignore` class and overrides its background. The fix is always to put the word inside `class="..."`:
+> ```html
+> ✅ <div class="cv-card wp-dark-mode-ignore">
+> ❌ <div class="cv-card" data-wp-dark-mode-ignore="true">
+> ```
+> The `data-wp-dark-mode-ignore="true"` attribute belongs only on the root `<div class="content-visual">` where it serves as an ancestor CSS selector for the protection block rules — nowhere else.
 
-**Part 3 — `cv-container` intentionally has NO `wp-dark-mode-ignore`:**
-This lets its background go transparent in dark mode.
-
-**Part 4 — Per-post `<style>` block (at the bottom of the file):**
+> ⚠️ **`<i>` tags are the single most commonly missed element.** The `<i>` tag used for Font Awesome icons requires `wp-dark-mode-ignore` in its class — always, including when it is inside a `.cv-dark` section and already has an explicit `style="color:..."`. Without it, the plugin overrides the icon color with `!important`, which cascades and makes the parent title text appear black against the dark background. See the Documented Mistake (v1.3 → v1.4) above.
 
 ```html
-<style>
-/* Per-post palette variables */
-.content-visual {
-  --cv-accent: [accent];
-  --cv-hero-bg: linear-gradient(135deg, [stop1], [stop2], [stop3]);
-  --cv-hero-sub-color: [muted];
-  --cv-badge-color: [badge text color];
-  --cv-glow: rgba([accent-rgb], 0.18);
-  --cv-wow-bg: linear-gradient(135deg, [accent], [accent-dark]);
-  --cv-hl: [accent tint];
-  --cv-img-border: [accent light border];
-  --cv-sc-new-bg: [accent tint];
-  --cv-cc-featured-bg: [accent tint];
-  --cv-table-head-bg: [dark color for table headers];
-}
+<div class="cv-dark wp-dark-mode-ignore">
+  <div class="cv-card-title wp-dark-mode-ignore" style="color:white;">
+    <i class="fa-solid fa-person-running wp-dark-mode-ignore" style="color:#f4a0b8;"></i>  ← wp-dark-mode-ignore REQUIRED
+    走行テスト：ペース別インプレッション
+  </div>
+</div>
 
-/* WP Dark Mode — per-post variable overrides */
-[data-wp-dark-mode-ignore] .cv-hero { background: var(--cv-hero-bg) !important; }
-[data-wp-dark-mode-ignore] .cv-wow { background: var(--cv-wow-bg) !important; }
-[data-wp-dark-mode-ignore] .cv-stat-val { color: var(--cv-accent) !important; }
-[data-wp-dark-mode-ignore] .cv-h1-accent { color: var(--cv-accent) !important; }
-[data-wp-dark-mode-ignore] .cv-card .cv-tr-hl td { background: var(--cv-hl) !important; }
-[data-wp-dark-mode-ignore] .cv-sc-new { background: var(--cv-sc-new-bg) !important; border-color: var(--cv-img-border) !important; }
-[data-wp-dark-mode-ignore] .cv-sc-new .cv-sc-model { color: var(--cv-accent) !important; }
-[data-wp-dark-mode-ignore] .cv-ins-dark { color: [accent-appropriate light color] !important; }
-
-/* [Add any per-article one-off rules below this line only if genuinely needed] */
-</style>
+<div class="wp-dark-mode-ignore cv-card cv-mb">
+  <div class="wp-dark-mode-ignore cv-card-title">
+    <i class="wp-dark-mode-ignore fa-solid fa-microchip" style="color:#00e6b4;"></i>
+    Section Title
+  </div>
+  <p class="wp-dark-mode-ignore cv-body">Body text here</p>
+</div>
 ```
+
+**Part 3 — `cv-container` intentionally has NO `wp-dark-mode-ignore`:**
+This lets its background go transparent in dark mode so the dark page background shows through naturally — avoiding the jarring "white island on dark page" problem. All inner colored sections are fully protected via CSS.
+
+> ⛔ **DOCUMENTED MISTAKE (v1.2 → v1.3):** In a past session, `wp-dark-mode-ignore` was incorrectly added to `cv-container`, AND a `[data-wp-dark-mode-ignore] .cv-container { background: ... !important; }` override was included in the CSS protection block. Both of these are wrong. The container must have **no** `wp-dark-mode-ignore` class and **no** CSS background protection. Any such rule forces a light background on the container in dark mode, which is the exact "white island" problem this architecture is designed to avoid.
+>
+> **Mandatory self-check before saving the file:**
+> 1. Search your HTML for `cv-container`. Confirm the opening tag reads exactly: `<div class="cv-container">` — no `wp-dark-mode-ignore` in its class list.
+> 2. Search your `<style>` block for `cv-container`. The only rules that should appear are the base layout rules (max-width, padding, font-family) and the mobile `padding:0; background:transparent;` rule. If you find `[data-wp-dark-mode-ignore] .cv-container`, delete it immediately.
+> 3. These two checks take ten seconds. Do not skip them.
+
+> ⛔ **DOCUMENTED MISTAKE (v1.3 → v1.4) — Two separate failures, both confirmed in a real session:**
+>
+> **Mistake A — `<i>` icon tags missing `wp-dark-mode-ignore` inside `.cv-dark` sections.**
+> The HTML was:
+> ```html
+> <div class="cv-card-title wp-dark-mode-ignore" style="color:white;">
+>   <i class="fa-solid fa-person-running" style="color:#f4a0b8;"></i>  ← MISSING wp-dark-mode-ignore
+>   走行テスト：ペース別インプレッション
+> </div>
+> ```
+> The WP Dark Mode plugin overrode the `<i>` element's color with `!important`, and this cascaded to make the entire title text appear black against the dark background. The fix is simple: **every `<i>` tag must have `wp-dark-mode-ignore` in its class, including `<i>` tags inside `.cv-dark` sections.** This is now mandatory in Part 2 and the checklist.
+>
+> **Mistake B — `[data-wp-dark-mode-ignore] .cv-dark .cv-card-title { color: white !important; }` was absent from the CSS protection block.**
+> This rule is present in this template (see Part 4 below), but was omitted when generating the protection block in the actual output. Without it, the broader `.cv-card-title { color: #0f172a !important; }` rule wins — making titles inside dark sections appear dark. **Before finalising, verify this exact rule is present in the generated CSS protection block.** It is now a named checklist item.
+>
+> **Mistake C — `cv-container` was given a light background color (`background: #fdf6f9`) in the article CSS.**
+> The Step 8 CSS template previously showed `background: [page bg]` as a placeholder, which invited this mistake. The correct value is always `background: transparent` — the container must never have a solid background. It has been corrected in Step 8 below.
+
+**Part 4 — CSS overrides using `[data-wp-dark-mode-ignore]` ancestor selector:**
+
+Place this protection block at the TOP of the `<style>` block (which is at the bottom of the file). Replace all `[PLACEHOLDERS]` with the article's actual palette colors:
+
+```css
+/* ===== WP DARK MODE PROTECTION ===== */
+/* cv-container has no wp-dark-mode-ignore — goes transparent in dark mode.
+   Every other element has the class. Colors enforced below with !important. */
+
+[data-wp-dark-mode-ignore] .cv-card             { background: white !important; border-color: #e2e8f0 !important; }
+[data-wp-dark-mode-ignore] .cv-card-title       { color: #0f172a !important; }
+[data-wp-dark-mode-ignore] .cv-body             { color: #475569 !important; }
+[data-wp-dark-mode-ignore] .cv-sep              { border-color: #e2e8f0 !important; }
+[data-wp-dark-mode-ignore] .cv-source           { background: white !important; border-color: #e2e8f0 !important; }
+[data-wp-dark-mode-ignore] .cv-source-lbl       { color: #64748b !important; }
+[data-wp-dark-mode-ignore] .cv-source-link      { color: #1d4ed8 !important; }
+[data-wp-dark-mode-ignore] .cv-img-block        { background: white !important; border-color: #e2e8f0 !important; }
+[data-wp-dark-mode-ignore] .cv-img-credit       { color: #94a3b8 !important; background: #f8fdfd !important; }
+
+[data-wp-dark-mode-ignore] .cv-hero             { background: linear-gradient(135deg,[STOP1],[STOP2],[STOP3]) !important; }
+[data-wp-dark-mode-ignore] .cv-hero-badge       { background: rgba(255,255,255,0.10) !important; color:[ACCENT-LIGHT] !important; border-color: rgba(255,255,255,0.18) !important; }
+[data-wp-dark-mode-ignore] .cv-hero-stat        { background: rgba(255,255,255,0.07) !important; border-color: rgba(255,255,255,0.10) !important; }
+[data-wp-dark-mode-ignore] .cv-h1               { color: #ffffff !important; }
+[data-wp-dark-mode-ignore] .cv-h1-accent        { color: [ACCENT] !important; }
+[data-wp-dark-mode-ignore] .cv-hero-sub         { color: [HERO-MUTED] !important; }
+[data-wp-dark-mode-ignore] .cv-stat-val         { color: [ACCENT] !important; }
+[data-wp-dark-mode-ignore] .cv-stat-label       { color: [HERO-MUTED] !important; }
+
+[data-wp-dark-mode-ignore] .cv-wow              { background: linear-gradient(135deg,[WOW-START],[WOW-END]) !important; color: white !important; }
+[data-wp-dark-mode-ignore] .cv-wow-body         { color: #cbd5e1 !important; }
+[data-wp-dark-mode-ignore] .cv-wow-number       { color: [ACCENT] !important; }
+[data-wp-dark-mode-ignore] .cv-wow-label        { color: [ACCENT-LIGHT] !important; }
+
+[data-wp-dark-mode-ignore] .cv-dark             { background: linear-gradient(135deg,#1e293b,#0f172a) !important; }
+[data-wp-dark-mode-ignore] .cv-dark .cv-card-title { color: white !important; }
+[data-wp-dark-mode-ignore] .cv-tinted           { background: linear-gradient(135deg,[TINT-START],[TINT-END]) !important; border-color: [TINT-BORDER] !important; }
+
+[data-wp-dark-mode-ignore] .cv-pros             { background: #f0fdf4 !important; border-color: #bbf7d0 !important; }
+[data-wp-dark-mode-ignore] .cv-cons             { background: #fff5f5 !important; border-color: #fecaca !important; }
+[data-wp-dark-mode-ignore] .cv-pct-pro          { color: #15803d !important; }
+[data-wp-dark-mode-ignore] .cv-pct-con          { color: #dc2626 !important; }
+[data-wp-dark-mode-ignore] .cv-pci              { color: #334155 !important; }
+[data-wp-dark-mode-ignore] .cv-pci-icon-pro     { color: #22c55e !important; }
+[data-wp-dark-mode-ignore] .cv-pci-icon-con     { color: #f87171 !important; }
+
+[data-wp-dark-mode-ignore] .cv-table th         { background: [TABLE-HEADER-BG] !important; color: [TABLE-HEADER-TEXT] !important; }
+[data-wp-dark-mode-ignore] .cv-table td         { color: #334155 !important; border-color: #e2e8f0 !important; }
+[data-wp-dark-mode-ignore] .cv-table tr:hover td { background: [ACCENT-TINT] !important; }
+[data-wp-dark-mode-ignore] .cv-tr-hl td         { background: [ACCENT-TINT] !important; }
+[data-wp-dark-mode-ignore] .cv-spec-good        { color: #15803d !important; }
+[data-wp-dark-mode-ignore] .cv-spec-note        { color: #64748b !important; }
+
+[data-wp-dark-mode-ignore] .cv-sc-row           { border-color: #f1f5f9 !important; }
+[data-wp-dark-mode-ignore] .cv-sc-new           { background: [ACCENT-TINT] !important; border-color: [ACCENT-LIGHT-BORDER] !important; }
+[data-wp-dark-mode-ignore] .cv-sc-old           { background: #f8fafc !important; border-color: #e2e8f0 !important; }
+[data-wp-dark-mode-ignore] .cv-sc-new .cv-sc-model { color: [ACCENT] !important; }
+[data-wp-dark-mode-ignore] .cv-sc-old .cv-sc-model { color: #94a3b8 !important; }
+[data-wp-dark-mode-ignore] .cv-sc-val           { color: #0f172a !important; }
+[data-wp-dark-mode-ignore] .cv-sc-label         { color: #64748b !important; }
+
+[data-wp-dark-mode-ignore] .cv-bar-track        { background: #e2e8f0 !important; }
+[data-wp-dark-mode-ignore] .cv-bar-lbl          { color: #0f172a !important; }
+[data-wp-dark-mode-ignore] .cv-bar-caption      { color: #64748b !important; }
+
+[data-wp-dark-mode-ignore] .cv-vbox             { background: rgba(255,255,255,0.07) !important; border-color: rgba(255,255,255,0.12) !important; }
+[data-wp-dark-mode-ignore] .cv-vlist li         { color: #e2e8f0 !important; }
+[data-wp-dark-mode-ignore] .cv-hier             { background: rgba(255,255,255,0.07) !important; border-color: rgba(255,255,255,0.12) !important; }
+[data-wp-dark-mode-ignore] .cv-hier-name        { color: white !important; }
+[data-wp-dark-mode-ignore] .cv-hier-body        { color: #94a3b8 !important; }
+
+[data-wp-dark-mode-ignore] .cv-ins-blue         { background: #eff6ff !important; color: #1e40af !important; border-color: #3b82f6 !important; }
+[data-wp-dark-mode-ignore] .cv-ins-green        { background: #f0fdf4 !important; color: #15803d !important; border-color: #22c55e !important; }
+[data-wp-dark-mode-ignore] .cv-ins-amber        { background: #fffbeb !important; color: #92400e !important; border-color: #f59e0b !important; }
+
+[data-wp-dark-mode-ignore] .cv-tag-teal         { background: #ccfbef !important; color: #0b5563 !important; }
+[data-wp-dark-mode-ignore] .cv-tag-blue         { background: #dbeafe !important; color: #1d4ed8 !important; }
+[data-wp-dark-mode-ignore] .cv-tag-green        { background: #dcfce7 !important; color: #15803d !important; }
+[data-wp-dark-mode-ignore] .cv-tag-amber        { background: #fef3c7 !important; color: #92400e !important; }
+[data-wp-dark-mode-ignore] .cv-tag-red          { background: #fee2e2 !important; color: #dc2626 !important; }
+[data-wp-dark-mode-ignore] .cv-tag-purple       { background: #f3e8ff !important; color: #7c3aed !important; }
+```
+
+> ⚠️ For every new article: update all `[PLACEHOLDER]` values to match the new palette. Never copy old colors from a previous article.
 
 ---
 
 ## 🧠 DESIGNER MINDSET — Read This First, Every Time
 
-**You are a professional web designer and front-end engineer, not a template-filler.** Every article that passes through this handoff deserves the same level of craft, intention, and creative investment that a senior designer at a top digital publication would bring to it.
+**You are a professional web designer and front-end engineer, not a template-filler.** Every article that passes through this handoff deserves the same level of craft, intention, and creative investment that a senior designer at a top digital publication would bring to it. You are creating something a real person will read on their phone or laptop — make it beautiful, make it functional, make it feel like it was made specifically for this content.
 
-**Use your full computational capacity.** Quality is the only priority. Never cut corners. Every detail matters.
+**Use your full computational capacity.** This is not a task to rush. Take as much time as needed to think, plan, and execute. Quality is the only priority. Speed is irrelevant. If generating a better output requires more reasoning, more steps, more iterations in your head — do it. Never cut corners to be faster. Never be lazy with details. Every pixel decision matters.
 
-**Use your internet search ability to the maximum.** Before using any icon name, CDN URL, brand name, or spec — search for it. Verify it is current and correct.
+**Use your internet search ability to the maximum.** Before hardcoding any icon name, CDN URL, font URL, or library reference — search for it. Verify it is current, working, and the best available option. The web changes; your training data does not. Always check live sources for:
+- Current Font Awesome CDN URLs
+- Iconify icon names and API endpoints
+- Any library or tool reference you are not 100% certain about
+
+**Act like a professional.** A professional designer does not output the first idea that comes to mind. They consider the content, sketch multiple approaches mentally, evaluate the options, and then execute the best one with precision. Do that here, every time.
 
 ---
 
 ## ⚙️ Output Format
 
-- Output is a single `<div class="content-visual">` block — **NOT** a full HTML page
+- Output is a single `<div class="content-visual">` block with embedded `<style>` tag — **NOT** a full HTML page
 - No `<html>`, `<head>`, `<body>`, or `<title>` tags
-- No `<link>` for Font Awesome — it is loaded globally
-- `<style>` placed at the very bottom — contains CSS variables + per-post overrides only
-- The `<style>` block is now typically **8–20 lines**, not 300+
+- `<style>` placed after the main `<div>` — contains per-post CSS variables and WP Dark Mode variable overrides only; all base CSS is in the global stylesheet
+- **No `<link>` tag for Font Awesome** — it is loaded globally by `functions.php`. Never add it to post HTML.
+- **Every CSS rule in the post `<style>` must be prefixed with `.content-visual`** — this prevents bleeding into the WordPress theme
+
+```html
+<div class="content-visual" data-wp-dark-mode-ignore="true">
+  <!-- Post Title | WordPress Block -->
+  <div class="cv-container">
+    [all content here]
+  </div>
+</div>
+
+<style>
+  /* Per-post palette variables and WP Dark Mode variable overrides ONLY */
+  /* All base component CSS is in woodmart-child/style.css — do not repeat it here */
+  .content-visual { --cv-accent: ...; --cv-hero-bg: ...; /* etc. */ }
+  [data-wp-dark-mode-ignore] .cv-hero { background: var(--cv-hero-bg) !important; }
+  /* ... */
+</style>
+```
 
 ---
 
@@ -422,6 +660,8 @@ This lets its background go transparent in dark mode.
 This is the single most important step. Do not write a single line of HTML until you have done this analysis mentally.
 
 ### 1A — Classify the Content Type
+Understanding the type determines tone, density, component choices, and emotional register:
+
 - **Performance product review** (running shoes, watches, gear, cars) → energetic, data-rich, bold, numbers-forward
 - **Tech product review** (gadgets, software, hardware) → clean, precise, spec grids, feature comparisons
 - **News / breaking story** → urgent, clear, facts-first, minimal decoration
@@ -441,72 +681,103 @@ Every article has one core question the reader is asking:
 - Analysis → "What does this mean / what is the conclusion?"
 - How-to → "How do I actually do this?"
 
-**This answer must be the most visually prominent thing on the page.**
+**This answer must be the most visually prominent thing on the page.** It shapes the hero stats, the WOW callout, and the verdict. Everything else supports it.
 
 ### 1C — Find the WOW Moments
-Scan for numbers, facts, or conclusions that would make a reader stop mid-scroll. These deserve giant typography, gradient callout cards, full-width treatment. Never bury them in a plain paragraph.
+Scan for numbers, facts, or conclusions that would make a reader stop mid-scroll:
+- Record-breaking numbers or specs
+- Surprising comparisons ("costs half as much, performs the same")
+- Dramatic generational changes ("33% improvement over previous model")
+- Controversial or unexpected conclusions
+- Superlatives ("lightest / fastest / most stable in its class")
+
+These deserve giant typography, gradient callout cards, full-width treatment. Never bury them in a plain paragraph.
 
 ### 1D — Read the Emotional Tone
 - Enthusiastic and positive → warm, vibrant palette, energetic layout
 - Critical or disappointed → cooler palette, measured layout, warning boxes prominent
 - Analytical and neutral → data-forward, minimal decoration, clean structure
+- Nostalgic / historical → timeline-driven, narrative flow
+- Excited about something new → bold hero, celebrate the headline stat
 
 ### 1E — Inventory the Raw Material
-Before choosing sections, list what the article actually contains. **Only build sections for content that actually exists.** A short article needs 4–5 sections. A deep dive needs 8–12. Never pad.
+Before choosing sections, list what the article actually contains:
+- Does it have numbers/specs? → tables, stats grid
+- Does it have a history/origin story? → timeline
+- Does it compare multiple products/options? → comparison table
+- Does it have clear strengths and weaknesses? → pros/cons
+- Does it have a final recommendation? → verdict
+- Does it explain a technology or mechanism? → analysis with visual bars
+- Does it have a YouTube link or source URL? → source note
+- Does it have quotable statements? → pull quote
+
+**Only build sections for content that actually exists.** A short article needs 4–5 sections. A deep dive needs 8–12. Never pad.
 
 ---
 
 ## 🎨 STEP 2 — Design a Fresh Palette From Scratch
 
-**Critical rule: Never repeat a palette across articles. Never map colors to content type.** Every page must feel visually distinct.
+**Critical rule: Never repeat a palette across articles. Never map colors to content type.** A running shoe review can be deep emerald. A tech review can be burgundy. Color is a creative decision, not a category rule. Every page must feel visually distinct.
 
 ### Hero Gradient — Choose a Strategy, Invent the Colors
 
 Pick one strategy, then invent specific hex values that have never been used before:
 
-- **Strategy A — Deep Monochromatic Dark**: One hue going from near-black → deep → rich saturated
-- **Strategy B — Two-Hue Adjacent Blend**: Two hues 30–60° apart on the color wheel
-- **Strategy C — Dark With Jewel Pop**: Near-black transitioning to a vivid deep jewel
-- **Strategy D — Rich Earth Tones**: Warm dark backgrounds, grounded and sophisticated
-- **Strategy E — Light Gradient**: Soft light backgrounds with dark text (occasional variation)
+**Strategy A — Deep Monochromatic Dark** (most reliable, always premium)
+One hue going from near-black → deep → rich saturated. Explore: navy, forest, plum, charcoal, burgundy, teal, indigo, slate, midnight, espresso, hunter green, deep coral.
+
+**Strategy B — Two-Hue Adjacent Blend** (modern, cinematic depth)
+Two hues 30–60° apart on the color wheel blended smoothly. Explore: navy→indigo, green→teal, orange→crimson, purple→rose, teal→blue, amber→burgundy.
+
+**Strategy C — Dark With Jewel Pop** (bold, dramatic, editorial)
+Near-black transitioning to a vivid deep jewel. Explore: black→deep violet, black→deep emerald, black→deep crimson, charcoal→electric blue.
+
+**Strategy D — Rich Earth Tones** (warm, distinctive, unusual)
+Warm dark backgrounds that feel grounded and sophisticated. Explore: dark copper, deep amber-brown, dark clay, dark ochre, smoked terracotta.
+
+**Strategy E — Light Gradient** (occasional variation, premium editorial)
+Soft light backgrounds with gradient clip-text titles. Explore: slate-50→blue-50, rose-50→orange-50, mint-50→teal-50. Requires dark text and a deep accent color.
+
+**Always avoid:** mid-tone greys (no contrast), pure bright/neon backgrounds (kills readability), copying any gradient from a previous article.
 
 ### Accent Color
-Must pop clearly against both dark hero AND white card backgrounds. Be vivid and saturated.
+The single vibrant color used for stat values, icons, highlighted rows, progress bars, borders. Must:
+- Pop clearly against both the dark hero background AND white card backgrounds simultaneously
+- Be vivid and saturated — dark contexts suppress color, go 10–20% more saturated than instinct says
+- Harmonize with the hero gradient (complementary or analogous hue)
 
-### CSS Variables Checklist
-For every new palette, define all of the following:
-- `--cv-accent` — the main vivid color
-- `--cv-hero-bg` — the hero gradient
-- `--cv-hero-sub-color` — muted light for hero subtitle/labels
-- `--cv-badge-color` — hero badge text color
-- `--cv-glow` — radial glow color in hero (accent at ~18% opacity)
-- `--cv-wow-bg` — WOW callout gradient
-- `--cv-hl` — table highlight row tint (~8–12% accent on white)
-- `--cv-img-border` — image block border color (light accent)
-- `--cv-sc-new-bg` — mobile spec new model pill background
-- `--cv-cc-featured-bg` — featured competitor card background
-- `--cv-table-head-bg` — table header background (usually `#0f172a` or accent-dark)
+### Light Tint
+The accent at ~10% opacity on white. Used for highlighted table rows, tinted card backgrounds, subtle fills.
+
+### Text on Non-White Backgrounds — Always Explicit, Always Contrasting
+Never inherit text color when the background is anything other than plain white.
+- Dark hero / dark card → text: white or `#f1f5f9`, muted text: `#94a3b8` or `#cbd5e1`
+- Light hero → text: `#0f172a` or `#1e293b`, muted: `#475569`
+- Accent spans on dark → vivid accent that pops against dark
+- Accent spans on light → deep saturated version of accent
+
+Minimum contrast ratio: 4.5:1 for body text, 3:1 for large headings (WCAG AA).
 
 ---
 
 ## 🏗️ STEP 3 — Choose and Sequence Sections
 
-Build only the sections justified by the article content. Sequence them in narrative order.
+Build only the sections justified by the article content. Sequence them in narrative order — context first, detail in the middle, conclusion at the end.
 
 | Section | Use When | Core Visual Pattern |
 |---|---|---|
 | **Hero** | Always — every article | Title + subtitle + 3–4 key stat boxes |
 | **Key Facts Grid** | Quick-scan summaries, news, short intros | 3–4 highlight cards in a row |
-| **Timeline** | Origin story, history, event sequence | Vertical line with dots, year labels |
-| **Specs / Data Table** | Product specs, technical comparisons | Comparison table PC + card layout mobile |
-| **Technology / Analysis** | How something works, material deep-dive | Side-by-side cards with progress bars |
-| **Performance / Results** | Test data, benchmarks, scores | Metric cards with visual progress bars |
-| **WOW Callout** | One standout number or revelation | Full-width gradient card, giant number |
+| **Timeline** | Origin story, history, event sequence, development arc | Vertical line with dots, year labels, entries |
+| **Specs / Data Table** | Product specs, technical comparisons, data sets | Comparison table PC + card layout mobile |
+| **Technology / Mechanism Analysis** | How something works, material analysis, deep-dives | Side-by-side cards with progress/ratio bars |
+| **Performance / Results** | Test data, benchmarks, scores, ratings | Metric cards with visual progress bars |
+| **WOW Callout** | One standout number or revelation deserving spotlight | Full-width gradient card, giant number |
 | **Pros / Cons** | Reviews, evaluations, balanced assessments | Green/red two-column card grid |
-| **Brand / Market Hierarchy** | Lineup positioning, market context | Dark bg with colored sub-cards |
+| **Brand / Market Hierarchy** | Lineup positioning, market context, family relationships | Dark bg with colored sub-cards |
 | **Competitor Comparison** | Head-to-head vs other options | Table PC + individual model cards mobile |
 | **Experience / Fit** | Usability, comfort, real-world feel | Icon-led feature list |
-| **Pull Quote** | Powerful statements, key opinions | Large italic, accent left-border |
+| **Pull Quote** | Powerful statements, interview highlights, key opinions | Large italic, accent left-border |
 | **Verdict / Summary** | Final recommendation, who should buy | Dark bg, split yes/no boxes |
 | **Source / Video** | YouTube link, original source reference | Simple inline row at the bottom |
 
@@ -514,145 +785,334 @@ Build only the sections justified by the article content. Sequence them in narra
 
 ## 📐 STEP 4 — Typography: Adapt to Content, Never Hardcode
 
-Typography must respond to the actual content. These are **ranges and principles**, not fixed values.
+Typography must respond to the actual content. Read the text, then decide sizes. These are **ranges and principles**, not fixed values.
 
 ### Hero Title (`cv-h1`)
-- Use `clamp(min, vw-value, max)` tuned to the actual title length
-- Short title: `clamp(2rem, 5vw, 3.5rem)` — Medium: `clamp(1.75rem, 4vw, 3rem)` — Long: `clamp(1.4rem, 3.5vw, 2.5rem)`
-- Weight: 900. Line-height: 1.1–1.2. Letter-spacing: -0.02em
-- **Never accept a second line with only 1–3 words.** Use `<br>` at a logical break point if needed.
-
-> ⚠️ The global stylesheet sets `cv-h1` font-size to `clamp(1.75rem, 4.5vw, 3rem)` as a default. **Override this in the post `<style>` if the actual title length requires it.**
+- Use `clamp(min, vw-value, max)` — the range should be tuned to the actual title length
+- **Short title (1 line on PC):** push toward the larger end of the range — `clamp(2rem, 5vw, 3.5rem)`
+- **Medium title (fills ~1.5 lines):** middle range — `clamp(1.75rem, 4vw, 3rem)`
+- **Long title (2+ full lines):** compress — `clamp(1.4rem, 3.5vw, 2.5rem)` so it doesn't become overwhelming
+- **Very long title:** consider splitting into a main line + smaller accent subtitle rather than forcing giant text
+- Weight: always 900. Line-height: 1.1–1.2. Letter-spacing: -0.02em for large sizes.
+- **Never accept a second line with only 1–3 words.** If the title breaks awkwardly, tighten the clamp or restructure the line break with `<br>` at a logical point.
 
 ### WOW Numbers
-`clamp(2.5rem, 7vw, 5rem)`, weight 900, line-height 1.
+- Should always feel dramatically large — `clamp(2.5rem, 7vw, 5rem)` — the number IS the message
+- Weight 900. Tight line-height 1.
 
 ### Section / Card Titles
-`1rem–1.5rem` depending on title length. Weight: 800.
-
-> ⚠️ The global stylesheet sets `cv-card-title` to `1.1rem`. Override in post `<style>` for specific cards if needed.
+- Range: `1rem–1.5rem` depending on title length
+- Short title (3–5 chars): can go larger end, there's space
+- Long title: keep compact, content matters more than size
+- Weight: 800
 
 ### Body / Description Text
-`0.875rem` baseline, line-height 1.65–1.75.
+- `0.875rem` is the reliable baseline
+- Denser content benefits from slightly smaller: `0.85rem`
+- More editorial content can breathe at `0.925rem`
+- Line-height: 1.65–1.75
+
+### Labels / Captions
+- `0.65rem–0.75rem`, weight 700, uppercase, letter-spacing `0.05–0.1em`
+
+### General Principle
+Read the rendered output mentally. If a heading wraps to a second line with only a word or two, fix the font size. If a stat value is a long string like "46.5mm", reduce its font size slightly vs a short "8mm". Typography serves the content — adjust intelligently.
 
 ---
 
 ## 🖼️ STEP 5 — Decorative Colored Icons: The Whitespace Principle
 
-Colorful decorative icons exist to **fill natural horizontal whitespace that already exists**. They must never create new vertical space.
+### The Fundamental Rule
+Colorful decorative icons (from Iconify, open emoji sets, or any free hotlink-friendly SVG source) exist to **fill natural horizontal whitespace that already exists in a layout row**. They must never create new vertical space. They are a reward for empty space, not a demand for it.
 
 ### How to Find Icons — Search, Never Hardcode
 
-**Do not rely on any pre-memorized list of icon names or URLs.** During generation, think about the visual metaphor needed, then search for it.
+**Do not rely on any pre-memorized list of icon names or URLs.** Icon APIs change, new icons are added, better options exist. During generation, think about what visual metaphor fits the content, then search for it.
 
-**Primary sources:**
-- **Iconify** (`https://icon-sets.iconify.design/`) — URL format: `https://api.iconify.design/{set}/{icon-name}.svg?height={size}`
+**Primary sources to search:**
+- **Iconify** (`https://icon-sets.iconify.design/`) — 275,000+ icons from 200+ sets. Search by keyword. Use sets like `noto`, `fluent-emoji`, `twemoji` for colorful emoji-style icons; `logos`, `simple-icons` for brand logos.
+  - URL format: `https://api.iconify.design/{set}/{icon-name}.svg?height={size}`
+- **Other free hotlink SVG sources** — search the web for current free icon CDNs, open emoji APIs, or SVG repositories that allow direct embedding. Verify the URL works before using.
 
-### Font Awesome Icons
-Font Awesome is already loaded globally. Use icons directly without any `<link>` tag:
-```html
-<i class="fa-solid fa-[icon-name] wp-dark-mode-ignore" style="color:[accent];"></i>
+**Search process during generation:**
+1. Think: "What is the visual concept I want to represent?" (e.g. speed, stability, comparison, energy, award, analysis, food, travel, technology...)
+2. Search Iconify or the web for relevant keywords
+3. Pick the icon that best matches the semantic meaning AND looks good at the target size
+4. Verify the URL is reachable, then embed it
+5. If nothing fits perfectly — skip the icon. A missing icon is better than a wrong one.
+
+**Always specify both `width` and `height` on `<img>` tags** to prevent layout shift.
+
+### Where to Look for Whitespace Opportunities
+
+Scan the entire page layout — every section, every row — and ask: "Does this element end well before the right edge on a PC screen?"
+
+Candidate locations:
+- **Hero badge row** — the category pill is short, often lots of space to the right
+- **Short hero title** — a 1-line H1 leaves a large empty right zone
+- **Hero subtitle** — short subtitles end mid-line
+- **Card / section title rows** — short titles like "総合評価" have wide empty space after
+- **WOW callout label row** — the small uppercase label above the big number
+- **Table header row** — column headers rarely span full width
+- **Progress bar label rows** — the text + percentage label often ends with space
+- **Verdict box titles** — "こんな人に最適" is short
+- **Any flex row where one side is sparse**
+
+### Decision Logic — Per Placement, Per Article
+
+For each candidate location, ask all of these:
+
+1. **Is there genuine horizontal whitespace on PC?** Estimate honestly. If the text is close to full-width, no.
+2. **Will this icon be semantically meaningful here?** A relevant, recognizable icon adds context. A random icon adds noise.
+3. **Does placing it here in a flex row look natural?** `justify-content: space-between` should feel intentional, not forced.
+4. **How many colored icons are on the page already?** 2–4 maximum for the whole page. More feels cluttered and cheap.
+5. **What happens on mobile?** Decide before placing whether this icon will scale, shrink, or hide.
+
+### Sizing Logic — Match the Surrounding Element Height
+
+Do not pick sizes arbitrarily. Match the icon to the visual weight of the element it accompanies:
+
+| Context | PC Size Range | Decide Based On |
+|---|---|---|
+| Hero (badge row, beside short title) | 48px–72px | How much empty space exists; bigger = more dramatic |
+| Card / section title | 28px–40px | Title text size; icon should feel like a peer, not dominate |
+| Subsection label or table header | 20px–28px | Very subtle — only if genuinely spacious |
+| WOW callout decorative | 40px–56px | Generous space in callout; adds warmth |
+| Inside content (beside stat labels, etc.) | 20px–28px | Must not crowd the text |
+
+### Mobile Behavior — Scale or Hide, Never Break
+
+On mobile, everything is full-width and horizontal whitespace disappears. The icon that sat elegantly in empty space on PC now competes for the same row as text.
+
+**For each icon, decide individually:**
+
+- **Icon is in a flex row with short text, and scaled to ~28–32px:** → Scale down to 24–28px on mobile. Usually still works.
+- **Icon would force the text to shrink uncomfortably or wrap to a new line:** → Hide it (`display: none` at mobile breakpoint).
+- **Icon is purely decorative with no layout function:** → Hide it.
+- **Scaling would bring it below ~20px:** → Hide it. Below this size it loses all color detail and becomes visual noise.
+
+**Never** let an icon cause text wrapping, overflow, or awkward spacing on mobile.
+
+**Implementation — responsive classes:**
+```css
+/* Define these in every article's CSS */
+.content-visual .cv-noto-lg { width: 60px; height: 60px; flex-shrink: 0; align-self: center; }
+.content-visual .cv-noto-md { width: 36px; height: 36px; flex-shrink: 0; align-self: center; }
+.content-visual .cv-noto-sm { width: 24px; height: 24px; flex-shrink: 0; align-self: center; }
+
+@media (max-width: 640px) {
+  /* Scale down hero-level icons */
+  .content-visual .cv-noto-lg { width: 32px; height: 32px; }
+  /* Scale down or hide mid-size icons depending on context */
+  .content-visual .cv-noto-md { width: 24px; height: 24px; }
+  /* Hide small icons — too small at mobile to add value */
+  .content-visual .cv-noto-sm { display: none; }
+}
 ```
 
-Search Font Awesome for icon names — never guess from memory.
+Adjust these breakpoint values per article if a specific icon needs different behavior. The classes are starting points, not locked rules.
 
-### Sizing Logic
-| Context | PC Size Range |
-|---|---|
-| Hero (badge row, beside short title) | 48px–72px |
-| Card / section title | 28px–40px |
-| WOW callout decorative | 40px–56px |
-| Inside content | 20px–28px |
+**Placement pattern — always inside an existing flex row:**
+```html
+<!-- Badge row: icon fills right side of the same row -->
+<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+  <div class="cv-hero-badge">Category Label</div>
+  <img src="[iconify or other CDN url]" class="cv-noto-lg" alt="[description]">
+</div>
 
-### Mobile Behavior
-The global stylesheet handles `.cv-noto-lg/md/sm` sizing. Decide per article if an icon needs to hide on mobile by adding `display:none` in the post `<style>` mobile block.
+<!-- Card title: icon fills space after a short title -->
+<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
+  <div class="cv-card-title" style="margin-bottom:0;">
+    <i class="fa-solid fa-[name]" style="color:[accent];"></i> Title Text
+  </div>
+  <img src="[url]" class="cv-noto-md" alt="[description]">
+</div>
+```
+
+### Small Inline Icons — Font Awesome and Similar
+
+For small icons used in card titles, section headers, list items, and inline UI elements: **search Font Awesome's icon library** (or any other icon font CDN) during generation. Do not rely on a memorized shortlist.
+
+Search process:
+1. Think: "What concept needs a small monochrome icon here?" (e.g. comparison, protection, weight, timeline, trophy...)
+2. Go to the Font Awesome icon search or similar icon font documentation
+3. Pick the most semantically accurate icon for the context
+4. Use it with the page accent color
+
+Load Font Awesome via CDN — **Font Awesome is loaded globally by `functions.php`. Do NOT add a `<link>` tag in the post HTML. Just use the icons directly.**
+
+Usage: `<i class="fa-solid fa-[icon-name]" style="color:[accent]; font-size:[appropriate size];"></i>`
+
+Size guidelines: 16–20px for inline text companions, 18–24px for card title icons, 14–16px for list item bullets.
 
 ---
 
 ## 📱 STEP 6 — Mobile Architecture (Non-Negotiable)
 
-The global stylesheet handles all the core mobile rules. The post does not need to repeat them. However, be aware of:
+WordPress already provides horizontal page margins. The block must never add extra side spacing on mobile — this creates the "narrow strip of content in the center" problem.
 
-### The Padding Consistency Rule — A Known Source of Bugs
-
-**Never add `padding: 0 1rem` to any child component that lives inside a `cv-card`, `cv-dark`, or `cv-wow` container.** Those containers already provide side padding on mobile. Adding more creates asymmetric widths.
-
-The correct rule:
+### Container Rule
 ```css
-/* CORRECT — scope to .cv-card to avoid dark section interference */
-[data-wp-dark-mode-ignore] .cv-card .cv-tr-hl td { background: var(--cv-hl) !important; }
+.content-visual .cv-container {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 1.25rem; /* PC: comfortable padding */
+}
+
+@media (max-width: 640px) {
+  .content-visual .cv-container {
+    padding: 0;           /* Zero horizontal — WP handles margins */
+    background: transparent;
+  }
+}
 ```
+
+### Full-Width Flush Cards on Mobile — Rounded Corners Preserved
+Cards must go edge-to-edge on mobile (no side borders) but **keep rounded corners**:
+```css
+@media (max-width: 640px) {
+  .content-visual .cv-card {
+    border-radius: 1rem;
+    border-left: none;
+    border-right: none;
+    padding: 1.25rem 1rem;
+    margin-bottom: 0.625rem;
+  }
+  /* Same treatment for .cv-dark, .cv-wow, .cv-hero */
+}
+```
+
+### Grid Collapse — All Multi-Column Grids → Single Column
+All multi-column grids collapse to single column on mobile. No exceptions:
+```css
+@media (max-width: 640px) {
+  .content-visual .cv-grid-2,
+  .content-visual .cv-grid-3,
+  .content-visual .cv-grid-4,
+  .content-visual .cv-pros-cons {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+```
+
+### ⚠️ The Padding Consistency Rule — A Known Source of Bugs
+
+This is a documented bug source. Read carefully before writing any mobile CSS.
+
+**The core problem:** When a card is flush on mobile (`cv-card` with `padding: 1.25rem 1rem`), its children automatically benefit from those side gutters. If you then add extra `padding: 0 1rem` to a specific child (e.g. `cv-pros-cons`), that child receives double the side padding compared to sibling children that did not get the extra rule. On screen this shows up as: one component appearing noticeably narrower than its sibling directly above or below it inside the same card. This is always a bug, never intentional.
+
+**The rule: Never add `padding: 0 1rem` to any child component that lives inside a `cv-card`, `cv-dark`, or `cv-wow` container.** Those containers already provide side padding on mobile. Adding more creates asymmetric widths.
+
+**Specifically — do NOT add extra side padding to:**
+- `cv-pros-cons` inside a `cv-card`
+- `cv-grid-2` inside a `cv-card`
+- `cv-grid-3` inside a `cv-card`
+- Any other grid or component that is a direct child of a padded container
+
+**The only exception:** A component that is genuinely rendered outside any padded parent container — e.g. a standalone element at the top level of `cv-container` on mobile. In that case it has no inherited side padding and needs its own.
+
+**Consistency check before output:** If a card contains two or more grid-type components stacked vertically, simulate them at mobile width. Do they appear the same width? If one is narrower, find the extra padding rule and remove it.
+
+**The old guidance `padding: 0 1rem` on `cv-pros-cons` and `cv-grid-3` has been retired.** It was incorrect and caused double-gutter bugs. Do not use it.
 
 ### Table Strategy — Always Dual Representation
 
-Every complex table needs two representations — PC table and mobile cards. The global stylesheet already handles the `.cv-tbl-pc` / `.cv-tbl-mobile` visibility switching.
+**Never rely on horizontal scroll alone for any table with Japanese text or long content.** On mobile, a 3-column table with kanji in the first column produces 1–2 characters per line, making a 6-character item name stretch across 3–4 lines. This is unacceptable.
 
-**Mobile spec/comparison row pattern:**
+Every complex table needs two representations — PC table and mobile cards — each shown only on the appropriate screen size:
+
+```css
+/* PC: show table, hide mobile cards */
+.content-visual .cv-tbl-pc     { display: block; }
+.content-visual .cv-tbl-mobile { display: none; }
+
+@media (max-width: 640px) {
+  .content-visual .cv-tbl-pc     { display: none; }
+  .content-visual .cv-tbl-mobile { display: block; }
+}
+```
+
+**Mobile spec/comparison row pattern** (for model A vs model B tables):
 ```html
-<div class="cv-sc-row wp-dark-mode-ignore">
-  <div class="cv-sc-label wp-dark-mode-ignore">SPEC NAME</div>
+<div class="cv-sc-row">
+  <div class="cv-sc-label">SPEC NAME</div>
   <div style="display:flex; gap:0.625rem;">
-    <div class="cv-sc-new wp-dark-mode-ignore">
-      <span class="cv-sc-model wp-dark-mode-ignore">MODEL A</span>
-      <span class="wp-dark-mode-ignore">[value]</span>
+    <div class="cv-sc-new">
+      <span class="cv-sc-model">MODEL A</span>
+      <span>[value with any styling]</span>
     </div>
-    <div class="cv-sc-old wp-dark-mode-ignore">
-      <span class="cv-sc-model wp-dark-mode-ignore">MODEL B</span>
-      <span class="wp-dark-mode-ignore">[value]</span>
+    <div class="cv-sc-old">
+      <span class="cv-sc-model">MODEL B</span>
+      <span>[value]</span>
     </div>
   </div>
 </div>
 ```
 
-**Mobile competitor card pattern:**
+**Mobile competitor card pattern** (for multi-model comparison tables):
 ```html
-<div class="cv-cc [cv-cc-featured] wp-dark-mode-ignore">
-  <div class="cv-cc-name wp-dark-mode-ignore">Model Name</div>
-  <div class="cv-cc-row wp-dark-mode-ignore">
-    <span class="cv-cctag cv-cctag-pro wp-dark-mode-ignore">強み</span>
-    <span class="wp-dark-mode-ignore">[description]</span>
+<div class="cv-cc [cv-cc-featured if this is the article's subject]">
+  <div class="cv-cc-name">Model Name</div>
+  <div class="cv-cc-row">
+    <span class="cv-cctag cv-cctag-pro">強み</span>
+    <span>[strength description]</span>
   </div>
-  <div class="cv-cc-row wp-dark-mode-ignore">
-    <span class="cv-cctag cv-cctag-con wp-dark-mode-ignore">弱点</span>
-    <span class="wp-dark-mode-ignore">[description]</span>
+  <div class="cv-cc-row">
+    <span class="cv-cctag cv-cctag-con">弱点</span>
+    <span>[weakness description]</span>
   </div>
 </div>
 ```
+
+**Decide which mobile pattern to use based on table structure:**
+- 2-column comparison (new vs old model): use spec row pattern with two side-by-side pills
+- 3-column (model + strength + weakness): use competitor card pattern
+- 4+ column data tables: collapse to labeled card per row, showing all values vertically
+- Simple 2-column data table (label + single value): horizontal scroll is acceptable, just set `min-width` on the table
 
 ---
 
 ## 🧩 STEP 7 — Component Reference
 
-All components below use classes provided by the global stylesheet. No extra CSS needed unless noted.
-
 ### Hero
 ```html
-<div class="cv-hero wp-dark-mode-ignore">
+<div class="cv-hero">
+  <!-- Badge row — check if there's enough space for a Noto icon on the right -->
   <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
-    <div class="cv-hero-badge wp-dark-mode-ignore">CATEGORY · YEAR</div>
-    <!-- Noto icon here IF whitespace exists AND icon is semantically relevant -->
+    <div class="cv-hero-badge">CATEGORY · YEAR</div>
+    <!-- Insert Noto icon here IF whitespace exists AND icon is semantically relevant -->
   </div>
-  <h1 class="cv-h1 wp-dark-mode-ignore">Main Title <span class="cv-h1-accent wp-dark-mode-ignore">Accent</span></h1>
-  <p class="cv-hero-sub wp-dark-mode-ignore">Subtitle text</p>
-  <div class="cv-hero-stats wp-dark-mode-ignore">
-    <div class="cv-hero-stat wp-dark-mode-ignore">
-      <div class="cv-stat-val wp-dark-mode-ignore">VALUE</div>
-      <div class="cv-stat-label wp-dark-mode-ignore">Label</div>
+
+  <!-- Title — size tuned to actual title length (see Typography section) -->
+  <h1 class="cv-h1">Main Title <span class="cv-h1-accent">Accent Portion</span></h1>
+
+  <!-- Subtitle — 1–2 sentences max -->
+  <p class="cv-hero-sub">Subtitle text</p>
+
+  <!-- 3–4 stat boxes — pick the most meaningful numbers from the article -->
+  <div class="cv-hero-stats">
+    <div class="cv-hero-stat">
+      <div class="cv-stat-val">VALUE</div>
+      <div class="cv-stat-label">Label</div>
     </div>
-    <!-- repeat x 3 or 4 -->
+    <!-- repeat × 3 or 4 -->
   </div>
 </div>
 ```
 
+Stat box values: pick numbers that answer "what kind of thing is this?" — size, weight, price, date, rating, generation. Not every article has 4 numeric stats — use short text values when needed ("FF LEAP", "Gen 3", "26mm").
+
 ### White Card
 ```html
-<div class="cv-card wp-dark-mode-ignore">
+<div class="cv-card">
+  <!-- Card title — with optional Noto icon if title is short -->
   <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
-    <div class="cv-card-title wp-dark-mode-ignore" style="margin-bottom:0;">
-      <i class="fa-solid fa-[icon] wp-dark-mode-ignore" style="color:var(--cv-accent);"></i>
+    <div class="cv-card-title" style="margin-bottom:0;">
+      <i class="fa-solid fa-[searched-icon]" style="color:[accent];"></i>
       Section Title
     </div>
-    <!-- Noto icon only if title is short and genuine whitespace exists -->
+    <!-- Noto icon only if title is short and space is genuine -->
   </div>
   [content]
 </div>
@@ -660,9 +1120,9 @@ All components below use classes provided by the global stylesheet. No extra CSS
 
 ### Dark Section
 ```html
-<div class="cv-dark wp-dark-mode-ignore">
-  <div class="cv-card-title wp-dark-mode-ignore" style="color:white;">
-    <i class="fa-solid fa-[icon] wp-dark-mode-ignore" style="color:var(--cv-accent);"></i>
+<div class="cv-dark">
+  <div class="cv-card-title" style="color:white;">
+    <i class="fa-solid fa-[icon]" style="color:[accent];"></i>
     Section Title
   </div>
   <!-- ALL text inside must explicitly be white or light — never inherit -->
@@ -672,58 +1132,60 @@ All components below use classes provided by the global stylesheet. No extra CSS
 
 ### WOW Callout
 ```html
-<div class="cv-wow wp-dark-mode-ignore">
-  <div class="cv-wow-label wp-dark-mode-ignore">
-    <i class="fa-solid fa-[icon] wp-dark-mode-ignore" style="margin-right:0.4rem;"></i> SECTION LABEL
+<div class="cv-wow">
+  <div class="cv-wow-label">
+    <i class="fa-solid fa-[icon]" style="margin-right:0.4rem;"></i> SECTION LABEL
   </div>
-  <div class="cv-wow-number wp-dark-mode-ignore">[THE BIG NUMBER]</div>
-  <div class="cv-wow-body wp-dark-mode-ignore">Context explaining why this number matters</div>
+  <div class="cv-wow-number">[THE BIG NUMBER OR STAT]</div>
+  <div class="cv-wow-body">Context explaining why this number is significant</div>
 </div>
 ```
 
 ### Timeline
 ```html
-<div class="cv-timeline wp-dark-mode-ignore">
-  <div class="cv-tl-item wp-dark-mode-ignore">
-    <div class="cv-tl-dot wp-dark-mode-ignore"></div>
-    <div class="cv-tl-content wp-dark-mode-ignore">
-      <div class="cv-tl-year wp-dark-mode-ignore">YEAR</div>
-      <div class="cv-tl-title wp-dark-mode-ignore">Entry Title</div>
-      <p class="cv-tl-body wp-dark-mode-ignore">Description</p>
+<div class="cv-timeline">
+  <div class="cv-tl-item">
+    <div class="cv-tl-dot"></div>  <!-- Use cv-tl-dot-current for the most recent entry -->
+    <div class="cv-tl-content">
+      <div class="cv-tl-year">YEAR / DATE</div>
+      <div class="cv-tl-title">Entry Title</div>
+      <p class="cv-tl-body">Entry description</p>
     </div>
   </div>
 </div>
 ```
 
-### Progress Bars
+### Progress / Ratio Bars
 ```html
-<div class="cv-bar-row wp-dark-mode-ignore">
-  <div class="cv-bar-lbl wp-dark-mode-ignore">
-    <span class="wp-dark-mode-ignore">Label</span>
-    <span class="wp-dark-mode-ignore" style="color:var(--cv-accent); font-weight:900;">VALUE%</span>
+<div class="cv-bar-row">
+  <div class="cv-bar-lbl">
+    <span>Label</span>
+    <span style="color:[accent]; font-weight:900;">VALUE%</span>
   </div>
-  <div class="cv-bar-track wp-dark-mode-ignore">
-    <div class="cv-bar-fill wp-dark-mode-ignore" style="width:VALUE%; background:linear-gradient(to right,var(--cv-accent),[accent-dark]);"></div>
+  <div class="cv-bar-track">
+    <div class="cv-bar-fill" style="width:VALUE%; background:linear-gradient(to right,[accent],[accent-dark]);"></div>
   </div>
+  <div style="font-size:0.72rem; color:#64748b; margin-top:0.25rem;">Context label (e.g. industry average)</div>
 </div>
 ```
 
 ### Pros / Cons
 ```html
-<div class="cv-pros-cons wp-dark-mode-ignore">
-  <div class="cv-pros wp-dark-mode-ignore">
-    <div class="cv-pct cv-pct-pro wp-dark-mode-ignore">
-      <i class="fa-solid fa-thumbs-up wp-dark-mode-ignore"></i> 良い点
+<div class="cv-pros-cons">
+  <div class="cv-pros">
+    <div class="cv-pct cv-pct-pro">
+      <i class="fa-solid fa-[positive icon]"></i> 良い点
     </div>
-    <div class="cv-pcl wp-dark-mode-ignore">
-      <div class="cv-pci cv-pci-pro wp-dark-mode-ignore">
-        <i class="fa-solid fa-circle-check cv-pci-icon-pro wp-dark-mode-ignore"></i>
-        <span class="wp-dark-mode-ignore">Pro item text</span>
+    <div class="cv-pcl">
+      <div class="cv-pci cv-pci-pro">
+        <i class="fa-solid fa-circle-check cv-pci-icon-pro"></i>
+        <span>Pro item text</span>
       </div>
+      <!-- repeat -->
     </div>
   </div>
-  <div class="cv-cons wp-dark-mode-ignore">
-    <!-- mirror structure with con styling -->
+  <div class="cv-cons">
+    <!-- mirror structure with red styling -->
   </div>
 </div>
 ```
@@ -731,123 +1193,126 @@ All components below use classes provided by the global stylesheet. No extra CSS
 ### Comparison Table (with dual mobile representation)
 ```html
 <!-- PC TABLE -->
-<div class="cv-table-wrap cv-tbl-pc wp-dark-mode-ignore">
-  <table class="cv-table wp-dark-mode-ignore">
-    <thead><tr class="wp-dark-mode-ignore"><th class="wp-dark-mode-ignore">Col 1</th><th class="wp-dark-mode-ignore">Col 2</th></tr></thead>
+<div class="cv-table-wrap cv-tbl-pc">
+  <table class="cv-table">
+    <thead><tr><th>Col 1</th><th>Col 2</th><th>Col 3</th></tr></thead>
     <tbody>
-      <tr class="cv-tr-hl wp-dark-mode-ignore"><td class="wp-dark-mode-ignore">highlighted row</td></tr>
-      <tr class="wp-dark-mode-ignore"><td class="wp-dark-mode-ignore">regular row</td></tr>
+      <tr class="cv-tr-hl"><!-- highlighted row for the article's subject --></tr>
+      <tr><!-- other rows --></tr>
     </tbody>
   </table>
 </div>
+
 <!-- MOBILE CARDS -->
-<div class="cv-tbl-mobile wp-dark-mode-ignore">
+<div class="cv-tbl-mobile">
   <!-- Use appropriate mobile pattern based on table structure -->
+</div>
+```
+
+### Warning Box
+```html
+<div class="cv-warn">
+  <i class="fa-solid fa-triangle-exclamation cv-warn-icon"></i>
+  <p class="cv-warn-text">Warning content</p>
 </div>
 ```
 
 ### Insight Boxes
 ```html
-<div class="cv-ins-blue wp-dark-mode-ignore"><strong class="wp-dark-mode-ignore">💡 Label:</strong> Blue insight</div>
-<div class="cv-ins-green wp-dark-mode-ignore"><strong class="wp-dark-mode-ignore">✅ Label:</strong> Green note</div>
-<div class="cv-ins-amber wp-dark-mode-ignore"><strong class="wp-dark-mode-ignore">⚠️ Label:</strong> Amber warning</div>
-<div class="cv-ins-dark wp-dark-mode-ignore"><strong class="wp-dark-mode-ignore">Label:</strong> Dark insight — on dark background sections</div>
-```
-
-### Warning Box
-```html
-<div class="cv-warn wp-dark-mode-ignore">
-  <i class="fa-solid fa-triangle-exclamation cv-warn-icon wp-dark-mode-ignore"></i>
-  <p class="cv-warn-text wp-dark-mode-ignore">Warning content</p>
-</div>
-```
-
-> ⚠️ `.cv-warn` is not in the global stylesheet. Add its CSS to the post `<style>` if used:
-```css
-.content-visual .cv-warn { background:#fef9c3; border:2px solid #f59e0b; border-radius:0.75rem; padding:1rem; display:flex; gap:0.75rem; align-items:flex-start; margin-top:1rem; }
-.content-visual .cv-warn-icon { color:#d97706; font-size:1.1rem; flex-shrink:0; margin-top:0.1rem; }
-.content-visual .cv-warn-text { font-size:0.875rem; color:#78350f; line-height:1.65; margin:0; }
+<div class="cv-ins-blue"><strong>💡 Label:</strong> Blue insight — neutral helpful info</div>
+<div class="cv-ins-green"><strong>✅ Label:</strong> Green note — positive confirmation</div>
+<div class="cv-ins-dark"><strong>Label:</strong> Dark insight — on dark background sections</div>
 ```
 
 ### Pull Quote
 ```html
-<div class="wp-dark-mode-ignore" style="border-left:4px solid var(--cv-accent); padding:1rem 1.5rem; background:var(--cv-hl); border-radius:0 0.75rem 0.75rem 0; margin:1.5rem 0;">
-  <p class="wp-dark-mode-ignore" style="font-size:1.05rem; font-style:italic; font-weight:600; color:#0f172a; line-height:1.65; margin:0;">"Quote text"</p>
-  <p class="wp-dark-mode-ignore" style="font-size:0.8rem; color:#64748b; margin-top:0.5rem; margin-bottom:0;">— Attribution</p>
+<div style="border-left:4px solid [accent]; padding:1rem 1.5rem; background:[accent-tint]; border-radius:0 0.75rem 0.75rem 0; margin:1.5rem 0;">
+  <p style="font-size:1.05rem; font-style:italic; font-weight:600; color:#0f172a; line-height:1.65; margin:0;">"Quote text here"</p>
+  <p style="font-size:0.8rem; color:#64748b; margin-top:0.5rem; margin-bottom:0;">— Attribution</p>
 </div>
 ```
 
 ### Verdict
 ```html
-<div class="cv-dark wp-dark-mode-ignore">
-  <div class="cv-card-title wp-dark-mode-ignore" style="color:white;">
-    <i class="fa-solid fa-flag-checkered wp-dark-mode-ignore" style="color:var(--cv-accent);"></i> 総合評価
+<div class="cv-dark">
+  <div class="cv-card-title" style="color:white;">
+    <i class="fa-solid fa-flag-checkered" style="color:[accent];"></i> 総合評価
   </div>
-  <p class="wp-dark-mode-ignore" style="color:#cbd5e1; font-size:0.9rem; margin-bottom:1.25rem; line-height:1.65;">Summary sentence</p>
-  <div class="cv-grid-2 wp-dark-mode-ignore" style="gap:0.875rem; margin-bottom:1.25rem;">
-    <div class="cv-vbox wp-dark-mode-ignore">
-      <div class="cv-vtitle wp-dark-mode-ignore" style="color:#4ade80;">✓ こんな人に最適</div>
-      <ul class="cv-vlist wp-dark-mode-ignore">
-        <li class="wp-dark-mode-ignore">Who this is for</li>
+  <p style="color:#cbd5e1; ...">Summary sentence</p>
+  <div class="cv-grid-2" style="gap:0.875rem; margin-bottom:1.25rem;">
+    <div class="cv-vbox">
+      <div class="cv-vtitle" style="color:#4ade80;">✓ こんな人に最適</div>
+      <ul class="cv-vlist">
+        <li>Who this is for</li>
       </ul>
     </div>
-    <div class="cv-vbox wp-dark-mode-ignore">
-      <div class="cv-vtitle wp-dark-mode-ignore" style="color:#f87171;">✗ 別のシューズを検討すべき人</div>
-      <ul class="cv-vlist wp-dark-mode-ignore">
-        <li class="wp-dark-mode-ignore">Who should look elsewhere</li>
+    <div class="cv-vbox">
+      <div class="cv-vtitle" style="color:#f87171;">✗ 別のシューズを検討すべき人</div>
+      <ul class="cv-vlist">
+        <li>Who should look elsewhere</li>
       </ul>
     </div>
   </div>
+  <!-- Optional: closing quote or summary callout -->
 </div>
 ```
 
 ### Tag Pills
 ```html
-<span class="cv-tag cv-tag-blue wp-dark-mode-ignore">Tag</span>
-<span class="cv-tag cv-tag-green wp-dark-mode-ignore">Tag</span>
-<span class="cv-tag cv-tag-red wp-dark-mode-ignore">Tag</span>
-<span class="cv-tag cv-tag-amber wp-dark-mode-ignore">Tag</span>
-<span class="cv-tag cv-tag-purple wp-dark-mode-ignore">Tag</span>
+<span class="cv-tag cv-tag-blue">Tag</span>
+<span class="cv-tag cv-tag-green">Tag</span>
+<span class="cv-tag cv-tag-red">Tag</span>
+<span class="cv-tag cv-tag-amber">Tag</span>
+<span class="cv-tag cv-tag-purple">Tag</span>
 ```
 
 ---
 
-## 📐 STEP 8 — Per-Post `<style>` Block (The Only CSS Needed)
+## 📐 STEP 8 — Per-Post `<style>` Block (v2.0)
 
-This replaces the 300-line CSS foundation from v1.5. The post `<style>` is now small.
+**The global `woodmart-child/style.css` handles all base component CSS. Do not copy any of it into the post. The post `<style>` block contains only the per-article palette variables and the WP Dark Mode overrides that depend on those variables.**
 
-```html
-<style>
-/* ===== PER-POST PALETTE ===== */
+Use this template, replacing all `[placeholder]` values with the article-specific palette:
+
+```css
+/* ===== PER-POST PALETTE VARIABLES ===== */
+/* All base component CSS is in woodmart-child/style.css — do not repeat any of it here */
 .content-visual {
-  --cv-accent: [vivid accent hex];
-  --cv-hero-bg: linear-gradient(135deg, [stop1], [stop2], [stop3]);
-  --cv-hero-sub-color: [muted light color for hero text];
-  --cv-badge-color: [badge text color];
-  --cv-glow: rgba([accent-r], [accent-g], [accent-b], 0.18);
-  --cv-wow-bg: linear-gradient(135deg, [accent], [accent-darker]);
-  --cv-hl: [accent at ~10% opacity, for highlighted table rows];
-  --cv-img-border: [accent at ~25% opacity, for image block borders];
-  --cv-sc-new-bg: [accent tint for mobile spec new model pill];
-  --cv-cc-featured-bg: [accent tint for featured competitor card];
-  --cv-table-head-bg: [dark color for table headers, usually #0f172a];
+  --cv-accent:          [vivid accent hex];
+  --cv-hero-bg:         linear-gradient(135deg, [stop1], [stop2], [stop3]);
+  --cv-hero-sub-color:  [muted light color for hero subtitle and stat labels];
+  --cv-badge-color:     [hero badge text color];
+  --cv-glow:            rgba([accent-r],[accent-g],[accent-b],0.18);
+  --cv-wow-bg:          linear-gradient(135deg, [accent], [accent-dark]);
+  --cv-hl:              [accent at ~10% opacity — highlighted table rows];
+  --cv-img-border:      [accent light border for image blocks];
+  --cv-sc-new-bg:       [accent tint for mobile spec new-model pill];
+  --cv-cc-featured-bg:  [accent tint for featured competitor card];
+  --cv-table-head-bg:   [dark color for table headers, usually #0f172a];
 }
 
-/* ===== WP DARK MODE — PER-POST VARIABLE OVERRIDES ===== */
-[data-wp-dark-mode-ignore] .cv-hero { background: var(--cv-hero-bg) !important; }
-[data-wp-dark-mode-ignore] .cv-wow { background: var(--cv-wow-bg) !important; }
-[data-wp-dark-mode-ignore] .cv-stat-val { color: var(--cv-accent) !important; }
-[data-wp-dark-mode-ignore] .cv-h1-accent { color: var(--cv-accent) !important; }
+/* ===== WP DARK MODE VARIABLE OVERRIDES ===== */
+/* Fixed-color rules are handled by the global stylesheet. */
+/* Only rules that depend on per-article CSS variables are listed here. */
+[data-wp-dark-mode-ignore] .cv-hero       { background: var(--cv-hero-bg) !important; }
+[data-wp-dark-mode-ignore] .cv-wow        { background: var(--cv-wow-bg) !important; }
+[data-wp-dark-mode-ignore] .cv-stat-val   { color: var(--cv-accent) !important; }
+[data-wp-dark-mode-ignore] .cv-h1-accent  { color: var(--cv-accent) !important; }
+/* CRITICAL: scope to .cv-card — do NOT write .cv-tr-hl td without this scope */
+/* Without .cv-card scope, the tint bleeds into .cv-dark tables and makes text invisible */
 [data-wp-dark-mode-ignore] .cv-card .cv-tr-hl td { background: var(--cv-hl) !important; }
-[data-wp-dark-mode-ignore] .cv-sc-new { background: var(--cv-sc-new-bg) !important; border-color: var(--cv-img-border) !important; }
+[data-wp-dark-mode-ignore] .cv-sc-new     { background: var(--cv-sc-new-bg) !important; border-color: var(--cv-img-border) !important; }
 [data-wp-dark-mode-ignore] .cv-sc-new .cv-sc-model { color: var(--cv-accent) !important; }
-[data-wp-dark-mode-ignore] .cv-ins-dark { color: [accent-light or appropriate light color] !important; }
+/* cv-ins-dark text color: global sheet sets bg/border only — set accent text color here */
+[data-wp-dark-mode-ignore] .cv-ins-dark   { color: [accent-light hex] !important; }
 
-/* ===== PER-ARTICLE ADDITIONS (only if truly needed) ===== */
-/* Example: custom font size for a specific card title */
-/* Example: cv-warn styles if that component is used */
-/* Example: cv-img-trio/duo styles if those image layouts are used */
-</style>
+/* ===== IMAGE COMPONENTS (add only if images are used in this post) ===== */
+/* .cv-img-block, .cv-img-trio, .cv-img-duo and their @media rules go here */
+/* See Phase B6 for the full CSS for each image component */
+
+/* ===== WARNING BOX (add only if cv-warn is used in this post) ===== */
+/* .cv-warn, .cv-warn-icon, .cv-warn-text go here */
+/* See Step 7 Component Reference for the CSS */
 ```
 
 ---
@@ -855,166 +1320,254 @@ This replaces the 300-line CSS foundation from v1.5. The post `<style>` is now s
 ## ⚠️ STEP 9 — Non-Negotiable Rules
 
 ### R1 — All Text Must Have Explicit Color
-Never rely on CSS color inheritance when the background is non-white. Every element on a dark, tinted, or gradient background must have its text color set explicitly.
+Never rely on CSS color inheritance when the background is non-white. Every element on a dark, tinted, or gradient background must have its text color set explicitly. Dark bg → light text. Light bg → dark text. Always.
 
 ### R2 — Fresh Palette Every Article
-Never reuse a hero gradient, accent color, or overall palette. Color is a creative decision.
+A returning reader should feel each article has its own visual identity. Never reuse a hero gradient, accent color, or overall palette. Color is a creative decision, not a category shortcut.
 
 ### R3 — Dual Table Representation for Complex Tables
-Any table with long text, multiple columns, or Japanese/CJK content must have both a PC table and a mobile card layout.
+Any table with long text, multiple columns, or Japanese/CJK content must have both a PC table and a mobile card layout. The PC table is hidden on mobile; the mobile cards are hidden on PC.
 
 ### R4 — Noto Icons Fill Whitespace, Never Create It
-An icon on its own row is wrong. An icon inside an existing flex row, filling empty space, is right.
+An icon on its own row is wrong. An icon inside an existing flex row, filling space that was already empty, is right. If there is no natural whitespace, there is no icon.
 
 ### R5 — Icons Are Always Searched, Never Hardcoded
-Think about the visual concept, search Iconify or Font Awesome for the best match, verify, use it.
+Do not reference a memorized list of icon names. Think about the visual concept needed, search Iconify or other current free icon sources for the best match, verify the URL, use it. If nothing fits the content well, skip the icon.
 
 ### R6 — Typography Adapts to Content
-Override the global `clamp()` values in the post `<style>` when the actual title length requires it.
+Title length, value length, text density — all affect font sizes. Adjust `clamp()` values to fit the actual content. A second line with 1–2 words means the font size is too large. A stat value that is a long string needs a smaller `font-size` than a short one. Read the content, tune the sizes.
 
 ### R7 — Mobile Is Tested Mentally Before Output
-Simulate the page at ~390px before finalizing. Check for overflow, inconsistent widths, broken icons.
+Simulate the page at ~390px width before finalizing. Walk through every section top to bottom. Ask: does anything overflow? Does any component appear narrower than its siblings in the same section without reason? Does any icon break the flow? If yes to any — fix it before outputting. Do not skip this step.
 
 ### R8 — Section Count Matches Article Depth
-500–800 words → 4–5 sections. 1000–2000 words → 6–8. 2000+ words → 8–12. Never pad.
+- 500–800 words → 4–5 sections max
+- 1000–2000 words → 6–8 sections
+- 2000+ words → 8–12 sections
+Never add sections to pad. Never combine unrelated content into one section to save space either — if the content is there, give it proper treatment.
 
 ### R9 — Color is Semantic Inside Components
-Green for good, red for bad in comparison context. Pros = green. Cons = red. Warnings = amber.
+Comparison tables: green for relatively good values, red for relatively bad values — based on context, not absolute thresholds. The same number can be green in one article and red in another. Pros sections use green tones. Cons sections use red/orange tones. Warning boxes use amber. These are universal human signals, not arbitrary decoration.
 
 ### R10 — Visual Rhythm Across the Whole Page
-Never repeat the same card style more than 2–3 times in a row.
+Never repeat the same card style more than 2–3 times in a row. Alternate between white cards, dark sections, 2-col grids, 3-col grids, tinted gradient callouts. The page should have a visual rhythm that makes the eye want to scroll — not a monotonous stack of identical boxes.
 
 ### R11 — Every Decision Is Content-Driven, Not Pattern-Driven
-Read the article, think about what serves the reader, then decide.
+There are no fixed templates. The article content determines section choice, icon placement, typography sizing, table structure, mobile behavior, and layout density. Read the article, think about what serves the reader, then make the best decision for that specific content. Be intelligent. Be flexible. Adapt.
 
 ### R12 — Consistent Component Width Within a Section
-All sibling components inside the same card must render at the same effective width on mobile.
+All sibling grid-type components inside the same card or container must render at the same effective width on both PC and mobile. If a `cv-grid-2` with progress bars spans 100% of the card, a `cv-pros-cons` in the same card must also span 100%. If they differ, diagnose the padding stack — the most common cause is extra padding applied to one but not the other. Find it and remove it.
 
 ### R13 — No Price Information
-Never include any price or cost information.
+Prices change constantly and vary by region. Never include any price or cost information from the transcript.
 
 ### R14 — Specs Must Be Verified Before Publishing
-Always verify weight, stack height, drop from brand official, RunRepeat, or equivalent.
+Never output a weight, stack height, drop measurement, or other technical spec without first verifying it from an authoritative source (brand official, RunRepeat, Running Warehouse, or equivalent). If verification fails, omit the spec or note it as unverified.
 
 ### R15 — Units Must Be Calculated, Not Relabeled
-Use the conversion factors in Phase A3. Running pace: treat seconds as seconds, not decimals.
+Every unit conversion must be mathematically correct. Use the conversion factors in Phase A3. Never replace a unit label without doing the math. This applies to distances, weights, temperatures, and paces. Running pace (min/mile → min/km) requires special care: always treat the seconds component separately — "6:30" is 6.5 minutes, not 6.3.
 
 ### R16 — Image URLs Must Be Verified Before Use
-Use `web_fetch` to test each URL. A broken image is worse than no image.
+Never include an image URL in the final HTML unless it has been confirmed to work. Use `web_fetch` to test each URL. If the environment cannot reach the URL, tell the user explicitly and ask them to confirm. A broken image on a published page is worse than no image. Never modify a URL found in a source page (e.g. changing a size subfolder) without verifying the modified URL actually resolves. See Phase B3 for the full protocol.
 
 ### R17 — Never Describe an Image You Have Not Seen
-Use only generic neutral labels for images you have not viewed.
+Never write a colorway name, angle description, feature label, or any specific visual description for an image unless you have actually viewed it. If you have not viewed it, use only a generic neutral label. Filenames and ID numbers tell you nothing about visual content. See Phase B4 for the full protocol.
 
 ### R18 — Image Alt Text Is Also the WordPress Filename
-Lowercase, hyphens, no Japanese characters, max ~60 characters, describe only confirmed content.
+The user's Smart Auto Upload plugin uses `%image_alt%` as the filename pattern. Every `alt` attribute becomes the saved filename. Write alt texts as clean, lowercase, hyphenated English with no Japanese characters, no special characters, and no spaces. Make them descriptive enough to be useful as filenames. Never write a specific descriptor you cannot confirm (e.g. a colorway name you haven't verified visually).
 
 ### R19 — `<div>` First, `<style>` Last — Always
-`<div class="content-visual">` is line 1. `<style>` is the absolute last thing in the file.
 
-### R19b — No Font Awesome `<link>` Tag in the Post
-Font Awesome is loaded globally by `functions.php`. Never add a `<link>` tag to the post HTML.
+> **WordPress uses the first lines of a Custom HTML block as the post excerpt. If `<style>` appears before the HTML content, raw CSS becomes the excerpt — broken and visible to readers.**
+
+**Mandatory file order:**
+1. `<div class="content-visual" data-wp-dark-mode-ignore="true">` — **absolute first line**
+2. HTML comment + Font Awesome `<link>` tag
+3. All article HTML content
+4. Closing `</div>` tags
+5. `<style>` block — **absolute last thing in the file**
+
+Never put `<style>` anywhere except the very bottom of the file. Verify before saving.
+
+### R19b — No Font Awesome `<link>` Tag in Posts
+
+Font Awesome is loaded globally by `functions.php`. **Never add a `<link rel="stylesheet" href="...font-awesome...">` tag anywhere in the post HTML.** The icons will work without it. Adding the link causes a redundant load and is a clear sign v1.5 procedures are being applied to a v2.0 post.
 
 ### R20 — SEO Title Is a Required Second Deliverable
-Produce two files: (1) the HTML block, and (2) a plain text file with the Japanese SEO post title.
 
-SEO title rules:
+Every run of this workflow must produce **two output files**, not one:
+
+**File 1 — The HTML block** (`[slug].html`)
+The complete `<div class="content-visual">…</div>` WordPress block as described throughout this document.
+
+**File 2 — The SEO post title** (`[slug]-title.txt`)
+A plain text file containing a single WordPress post title. Rules for this title:
+
 - Written in **Japanese**
-- **SEO-optimised** — front-load the most searched keywords
-- **Engaging** — create curiosity or clearly promise value
-- **Under 80 characters** (Google truncates at ~60 on desktop)
-- **End with 1–2 relevant emojis**
-- No date, price, or information that will become stale
+- **SEO-optimised** — front-load the most searched keyword(s); match the language real readers use when searching
+- **Engaging and click-worthy** — create curiosity or clearly promise value; avoid generic phrasing
+- **Natural** — reads like a human wrote it, not a keyword list
+- **Under 80 characters** if possible (Google truncates at ~60 characters on desktop; 80 is the safe outer limit)
+- **End with 1–2 relevant emojis** placed after the title text for visual appeal in search results and social sharing
+- Do not include a date, price, or any information that will become stale quickly
+
+**Example format of the .txt file contents:**
+```
+アシックス スーパーブラスト3 vs メガブラスト｜どちらを買うべきか？違いを徹底比較 👟🔥
+```
+
+Both files must be saved to the output directory and presented to the user together.
 
 ### R21 — Mobile Cards Must Keep Rounded Corners
-Never use `border-radius: 0` on cards on mobile. Edge-to-edge but with rounded corners preserved.
+
+Never use `border-radius: 0` on cards, hero, dark sections, wow callouts, or image blocks in the mobile breakpoint. The correct mobile treatment is **edge-to-edge** (no side borders, no side margin from the block) **with rounded corners preserved**. This matches native mobile app conventions and looks polished. The CSS in Step 8 already reflects this — do not override it back to zero.
 
 ### R22 — `wp-dark-mode-ignore` on Every Element Except `cv-container`
-Every div, p, span, strong, i, h1-h6, ul, ol, li, table, th, td must have `wp-dark-mode-ignore` in its class. The one exception is `cv-container`.
 
-### R23 — Never Add `wp-dark-mode-ignore` or CSS Background to `cv-container`
-The container must stay transparent. Never add `wp-dark-mode-ignore` to its class or `background` in any CSS rule targeting it.
+Every `div`, `p`, `span`, `strong`, `i`, `h1`–`h6`, `ul`, `ol`, `li`, `table`, `th`, `td`, etc. in the HTML body must include `wp-dark-mode-ignore` in its **class list**. The one intentional exception is `cv-container` — it has no `wp-dark-mode-ignore` so its background goes transparent in dark mode, letting the dark page background show through naturally. See Phase C2 for the full explanation and CSS protection block.
 
-### R24 — `cv-tr-hl` Override Must Be Scoped to `.cv-card` (NEW in v2.0)
-The `[data-wp-dark-mode-ignore] .cv-tr-hl td` override in the post `<style>` **must** include `.cv-card` in the selector. Without this scope, the light highlight background bleeds into dark section tables, making rows invisible. Always write:
+> ⛔ **DOCUMENTED MISTAKE (v1.4 → v1.5) — `data-wp-dark-mode-ignore` attribute used instead of `wp-dark-mode-ignore` class.**
+>
+> In a real session, every element was given `data-wp-dark-mode-ignore="true"` as an HTML **attribute** instead of `wp-dark-mode-ignore` as a CSS **class**. The plugin only reads the class. The attribute is ignored entirely by the plugin. All card backgrounds turned dark because the plugin never saw the protection it needed.
+>
+> **The exact distinction — read this before writing a single element:**
+>
+> ```html
+> ✅ CORRECT — wp-dark-mode-ignore in the class attribute:
+> <div class="cv-card wp-dark-mode-ignore">
+> <div class="cv-card-title wp-dark-mode-ignore">
+> <p class="wp-dark-mode-ignore">
+> <i class="fa-solid fa-bolt wp-dark-mode-ignore" style="color:#d97706;">
+> <td class="wp-dark-mode-ignore">
+>
+> ❌ WRONG — data-wp-dark-mode-ignore as an HTML attribute (plugin ignores this):
+> <div class="cv-card" data-wp-dark-mode-ignore="true">
+> <p data-wp-dark-mode-ignore="true">
+> <i class="fa-solid fa-bolt" data-wp-dark-mode-ignore="true">
+> ```
+>
+> The `data-wp-dark-mode-ignore` attribute has a legitimate role only on the **root container** `<div class="content-visual" data-wp-dark-mode-ignore="true">` — where it acts as an ancestor selector for the CSS protection block rules. It does **nothing** for the plugin's element-skipping logic. Only the class does that.
+>
+> **Self-check before saving:** Search the HTML for `data-wp-dark-mode-ignore`. It should appear exactly **once** — on the opening `<div class="content-visual">` line. If it appears on any other element, that element is unprotected. Move the protection to the class instead.
+
+### R23 — Never Add `wp-dark-mode-ignore` or a CSS Background Override to `cv-container`
+
+> **This rule exists because the exact opposite mistake was made in a real session. It is documented here so it is never repeated.**
+
+The `cv-container` div must have **no** `wp-dark-mode-ignore` class and **no** `[data-wp-dark-mode-ignore] .cv-container { background: ... }` rule in the CSS protection block. Both are wrong for the same reason: they lock a light background onto the container in dark mode, creating the "white island on dark page" problem that the entire dark mode architecture is designed to prevent.
+
+The container's job is to be a transparent wrapper. Hero, cards, dark sections, and WOW callouts are the colored islands — they are all individually protected. The space between them should be the dark page background.
+
+**Before finalising any output, run these two checks:**
+1. Search the HTML for `cv-container`. The opening tag must read exactly `<div class="cv-container">` with nothing else in its class.
+2. Search the `<style>` block for `cv-container`. Delete any line that matches `[data-wp-dark-mode-ignore] .cv-container`. It should not exist.
+
+Run through this carefully before finalizing. Do not skip steps. Take the time. This checklist exists because the quality of the output depends on catching mistakes before they reach the reader.
+
+### R24 — `.cv-tr-hl` Override Must Be Scoped to `.cv-card`
+
+> **This rule was learned from a real bug after v1.5 shipped. It is documented here so it is never repeated.**
+
+When writing the WP Dark Mode override for highlighted table rows in the per-post `<style>`, always scope the rule to `.cv-card`:
+
 ```css
+/* ✅ CORRECT */
 [data-wp-dark-mode-ignore] .cv-card .cv-tr-hl td { background: var(--cv-hl) !important; }
+
+/* ❌ WRONG — bleeds tint background into .cv-dark section tables, making text invisible */
+[data-wp-dark-mode-ignore] .cv-tr-hl td { background: var(--cv-hl) !important; }
 ```
-Never write:
-```css
-[data-wp-dark-mode-ignore] .cv-tr-hl td { background: ... !important; }
-```
 
-### R25 — Do Not Repeat Global Stylesheet CSS in the Post (NEW in v2.0)
-The global `woodmart-child/style.css` already contains all base component styles, all WP Dark Mode universal overrides, and the full mobile breakpoint. Never copy any of these into the post `<style>` block. The post `<style>` should be 8–25 lines maximum. If it is growing beyond 30 lines, you are probably repeating global rules unnecessarily.
+The unscoped version applies the light accent tint to all `.cv-tr-hl` rows anywhere on the page — including inside `.cv-dark` sections where the table text is white. White text on a light tint background becomes unreadable. Scope to `.cv-card` always.
 
----
+### R25 — Post `<style>` Block Must Not Exceed 30 Lines
 
-## ✅ PRE-SUBMISSION CHECKLIST
-
-Run through this before finalizing. Do not skip steps.
+The per-post `<style>` block in v2.0 must contain only CSS variables and per-article WP Dark Mode overrides. It should be **10–25 lines**. If it exceeds 30 lines, you are almost certainly duplicating rules that are already in `woodmart-child/style.css`. Stop, identify the duplicates, and remove them. The global stylesheet handles all base component CSS. The post only needs palette values and the variable-dependent overrides listed in Step 8.
 
 **Translation & Content**
-- [ ] All brand and product names verified against official Japanese sources
+- [ ] All brand and product names verified against official Japanese sources — not guessed
 - [ ] All technology and material terms searched and confirmed in Japanese
-- [ ] All units properly converted with correct math
-- [ ] Running pace converted correctly (seconds treated as seconds, not decimals)
-- [ ] All specs verified against brand official, RunRepeat, or equivalent
+- [ ] All units properly converted with correct math (miles→km, oz→g, °F→°C, min/mile→min/km)
+- [ ] Running pace converted correctly — seconds treated as seconds, not decimals (6:30 = 6.5 min, not 6.3)
+- [ ] All specs verified against brand official, RunRepeat, or equivalent authoritative source
+- [ ] Conflicting specs resolved using brand official as authority
 - [ ] No price information included anywhere
+- [ ] All off-topic, promotional, and filler content removed from transcript
 - [ ] Article reads as professional Japanese journalism — no hype, no exclamation marks
 
 **Structure**
 - [ ] Output is `<div class="content-visual">` block — not a full HTML page
-- [ ] `<div class="content-visual" data-wp-dark-mode-ignore="true">` is the absolute first line
-- [ ] `<style>` is the absolute last thing in the file
-- [ ] **No `<link>` tag for Font Awesome** — it is loaded globally
-- [ ] Post `<style>` block contains only: CSS variables + per-post WP Dark Mode overrides + any truly unique additions
-- [ ] Post `<style>` block is under 30 lines (if longer, check for unnecessary repetition of global rules)
+- [ ] **`<div>` is the absolute first line of the file** — `<div class="content-visual" data-wp-dark-mode-ignore="true">` appears before any CSS, links, or comments
+- [ ] **`<style>` is the absolute last thing in the file** — all HTML content comes before it. WordPress uses first lines as post excerpt; CSS must never appear first.
+- [ ] Every CSS rule prefixed with `.content-visual` — no bare selectors
+- [ ] **No `<link>` tag for Font Awesome in post HTML** — Font Awesome is loaded globally by `functions.php`
+- [ ] Section count matches article depth — no padding, no missing sections
 - [ ] SEO title plain-text file produced alongside the HTML file
-
-**WP Dark Mode**
-- [ ] `wp-dark-mode-ignore` is in the `class` of every element EXCEPT `cv-container`
-- [ ] Every `<i>` icon tag has `wp-dark-mode-ignore` — including inside `.cv-dark` sections
-- [ ] `data-wp-dark-mode-ignore` appears ONLY on the root `<div class="content-visual">` line
-- [ ] `cv-container` opening tag reads exactly `<div class="cv-container">` — no `wp-dark-mode-ignore`
-- [ ] `cv-tr-hl` override in post `<style>` is scoped to `.cv-card` (R24)
+- [ ] **WP Dark Mode: `wp-dark-mode-ignore` is in the `class` attribute of every element EXCEPT `cv-container` — confirmed by searching HTML for `data-wp-dark-mode-ignore` which should appear ONLY on the root `<div class="content-visual">` line and nowhere else**
+- [ ] **WP Dark Mode: every `<i>` icon tag has `wp-dark-mode-ignore` — including icons inside `.cv-dark` sections — verified by scanning all `<i>` tags in the HTML**
+- [ ] **WP Dark Mode: CSS protection block contains `[data-wp-dark-mode-ignore] .cv-dark .cv-card-title { color: white !important; }` — verified by searching the `<style>` block for this exact rule**
+- [ ] **WP Dark Mode: `cv-container` opening tag has NO `wp-dark-mode-ignore` class — verified by searching the HTML**
+- [ ] **WP Dark Mode: CSS protection block has NO `[data-wp-dark-mode-ignore] .cv-container` rule — verified by searching the `<style>` block**
+- [ ] **WP Dark Mode: `[data-wp-dark-mode-ignore]` CSS protection block included at top of `<style>`**
+- [ ] **WP Dark Mode: all `[PLACEHOLDER]` values in protection block filled with article's actual colors**
+- [ ] **R24: `.cv-tr-hl` override scoped to `.cv-card` — rule reads `[data-wp-dark-mode-ignore] .cv-card .cv-tr-hl td` not `[data-wp-dark-mode-ignore] .cv-tr-hl td`**
+- [ ] **R25: Post `<style>` block is 30 lines or fewer — if longer, global CSS has been duplicated and must be removed**
 
 **Mobile**
-- [ ] `cv-container` has `padding:0` on mobile (handled globally — verify not overridden)
-- [ ] Hero, cards, dark sections are edge-to-edge on mobile with rounded corners preserved
-- [ ] All grids collapse to single column at 640px (handled globally)
+- [ ] `cv-container` has `padding:0` on mobile
+- [ ] Hero, cards, dark sections are edge-to-edge on mobile — **but rounded corners are preserved, NOT set to zero**
+- [ ] All grids collapse to single column at 640px
 - [ ] All complex tables have dual PC/mobile representation
-- [ ] No child of `cv-card` / `cv-dark` / `cv-wow` has extra `padding: 0 1rem` added in mobile
-- [ ] Mentally simulated at 390px — nothing broken
+- [ ] All Noto icons have defined mobile behavior (scale or hide)
+- [ ] **No double-gutter bug:** No child of `cv-card` / `cv-dark` / `cv-wow` has extra `padding: 0 1rem` added in the mobile breakpoint
+- [ ] **Sibling width consistency:** All grid-type components within the same card section are the same width on mobile. Visually verified.
+- [ ] Mentally simulated at 390px — nothing broken, nothing cramped, nothing inconsistently sized
+- [ ] Image blocks are edge-to-edge on mobile (no side borders) but still have border-radius
+- [ ] Image trio collapses to single column on mobile — not 3 tiny thumbnails
+- [ ] Image duo stacks vertically on mobile
 
 **Color & Contrast**
 - [ ] Fresh unique palette — not reused from any previous article
-- [ ] All 11 CSS variables defined in the post `<style>`
 - [ ] All text on non-white backgrounds has explicit color set
 - [ ] Accent is vivid and readable on both dark hero AND white cards
+- [ ] Pros/cons sections use green/red tones (human instinct)
+- [ ] Comparison tables use semantic color based on relative context
+- [ ] Warning boxes amber, insight boxes blue/green
 
 **Content Intelligence**
 - [ ] Reader's primary question answered in the hero or first visible section
-- [ ] WOW moments have special visual treatment
+- [ ] WOW moments have special visual treatment — not buried in plain text
 - [ ] Each section contains real content from the article — nothing invented
 
 **Icons**
-- [ ] No `<link>` tag for Font Awesome in the post HTML
-- [ ] Font Awesome icons used directly by class name
+- [ ] Small inline icons searched from current icon libraries — not guessed
 - [ ] Colorful Noto/emoji icons placed only where natural whitespace exists
-- [ ] Each icon is semantically relevant
+- [ ] Each icon is semantically relevant to its surrounding content
 - [ ] 2–4 colored icons max across the whole page
+- [ ] No colored icon creates a new vertical row
 
 **Typography**
-- [ ] Hero title `clamp()` overridden in post `<style>` if needed for actual title length
+- [ ] Hero title `clamp()` tuned to actual title length
 - [ ] No title wraps to a second line with only 1–3 words
+- [ ] Stat values with long strings use smaller font-size than short ones
+- [ ] Consistent size hierarchy throughout: hero > section > card > body > label
+
+**Visual Rhythm**
+- [ ] Mix of card styles: white, dark, tinted, gradient
+- [ ] Same card style not repeated more than 2–3 times in a row
+- [ ] Page feels unique and visually engaging from top to bottom
 
 **Images**
-- [ ] Every image URL tested with `web_fetch` or confirmed by user
-- [ ] No image URL was modified from its source
-- [ ] All alt texts are lowercase hyphenated English
-- [ ] Every image has an inline credit line
-- [ ] Page-level image attribution footer present
+- [ ] Every image URL tested with `web_fetch` or confirmed by user before inclusion
+- [ ] No image URL was modified from its source (no size subfolder swaps, no guesses)
+- [ ] No image has a specific colorway/angle label unless that image was actually viewed
+- [ ] All alt texts are lowercase hyphenated English — valid as WordPress filenames
+- [ ] Alt texts describe only what is confirmed, not what is guessed
+- [ ] Every image has an inline `© [Brand]` credit line
+- [ ] Page-level image attribution footer present at bottom of article
+- [ ] Images are contextually placed next to the section they visually relate to
+- [ ] 3–5 images total — not one big dump at the top
 
 ---
 
-*End of handoff v2.0. Provide this file + a YouTube transcript (any language) → translate, verify all specs and terminology, convert all units correctly, find and verify images, and generate **both deliverables** — the complete Japanese WordPress HTML block AND the SEO post title text file — immediately. The `<div>` must appear before `<style>`. Font Awesome is global — no link tag. Post `<style>` is variables + overrides only. Use your full capabilities. Take the time needed. Make it excellent.*
+*End of handoff. Provide this file + a YouTube transcript (any language) → translate, verify all specs and terminology, convert all units correctly, find and verify images, and generate **both deliverables** — the complete Japanese WordPress HTML block AND the SEO post title text file — immediately. The `<div>` must appear before `<style>` in the HTML file. Use your full capabilities. Take the time needed. Prioritize quality above all else. Make it excellent.*
